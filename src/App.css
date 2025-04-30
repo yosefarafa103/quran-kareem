@@ -1,0 +1,6 @@
+@import "tailwindcss";
+body {
+  direction: rtl;
+  font-family: "Amiri", serif;
+  scroll-behavior: smooth;
+}
