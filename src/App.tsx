@@ -1,3 +1,4 @@
+import "./lib/i18n"
 import "./App.css"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import Home from "./components/Home"
@@ -7,8 +8,9 @@ import MwaketElsalaa from "./components/MwaketElsalaa"
 import Quran from "./components/Quran"
 import ReadFromPage from "./components/ReadFromPage"
 import SurahByImage from "./components/SurahByImage"
-import SurahByName from "./components/SurahByName"
+import SurahByName, { Wrapper } from "./components/SurahByName"
 import SurahText from "./components/SurahText"
+import Azkar from "./components/Azkar"
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -35,11 +37,18 @@ const App = () => {
           },
           {
             path: 'by-surahs', element: <Outlet />,
-            children: [{ path: "", element: <SurahByName /> }, { path: ":id", element: <SurahText /> }]
+            children: [{
+              path: "", element: <>
+                <Wrapper>
+                  <SurahByName />
+                </Wrapper>
+              </>
+            }, { path: ":id", element: <SurahText /> }]
           },
         ]
       },
-      { path: "/prayer-times", element: <MwaketElsalaa /> }
+      { path: "/prayer-times", element: <MwaketElsalaa /> },
+      { path: "/azkar", element: <Azkar /> }
       ]
     },
   ])

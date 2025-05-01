@@ -5,6 +5,7 @@ import { useFetchQuery } from "../hooks/useFetchQuery";
 import data from "../data/quranSurahs.json"
 import Loader from "./Loader";
 import { useEffect, useRef, useState } from "react";
+
 const SurahText = () => {
     const [fontSize, setFontSize] = useState(18)
     let { id: surahName } = useParams()
@@ -27,6 +28,8 @@ const SurahText = () => {
             }, 500);
         }
     }, [])
+    console.log(surah);
+
     return (
         <>
             {isLoading ? <Loader /> : <>
@@ -65,15 +68,32 @@ const SurahText = () => {
                             )
                         })
                     }
+                    {surah![0].surah_id === "114" && <EndDuaa font={fontSize} />}
                 </section>
             </>}
         </>
     )
 }
+export function EndDuaa({ font, title }: { title?: string, font: number }) {
+    return (
+        <>
+            {title &&
+                <h3>{title}</h3>
+            }
+            <section style={{ fontSize: font }} className="p-3 border-r-solid border-r-green-300 bg-green-50 border-r-[7px] leading-[1.5] rounded-lg mt-10 mb-5">
+                اللهم اجعل القرآن العظيم ربيع قلبي، ونور صدري، وجلاء حزني، وذهاب همّي.
+                اللهم علّمني منه ما جهلت، وذكّرني منه ما نُسّيت، وارزقني تلاوته آناء الليل وأطراف النهار، واجعله حجةً لي يا رب العالمين.
+                اللهم اجعلني ممن يحلّ حلاله، ويحرّم حرامه، ويعمل بمحكمه، ويؤمن بمتشابهه.
+                اللهم اجعل القرآن لنا في الدنيا قرينًا، وفي القبر مؤنسًا، وعلى الصراط نورًا، وفي الجنة رفيقًا، ومن النار ستراً وحجابًا.
+                اللهم اجعلنا من أهل القرآن الذين هم أهلك وخاصتك، يا أرحم الراحمين.
+                اللهم اجعل ختمتنا هذه ختمةً مباركة، واجعلها شاهدةً لنا لا علينا، وتقبّلها منا يا أكرم الأكرمين.
+            </section>
+        </>
+    )
+}
 export function JuzItem({ juzNum, font }: { font: number, juzNum: number }) {
     return (
-        <div style={{ fontSize: font * 1.2 }} className="block w-full p-3 text-white text-center rounded-lg bg-black my-4 mt-1"> الجزء {juzNum}</div>
-
+        <div style={{ fontSize: font * 1.2 }} className="block w-full p-3 sticky top-2 bg-white text-center rounded-lg border-2 border-solid border-black my-4 text-black z-[999] mt-1"> الجزء {juzNum}</div>
     )
 }
 export default SurahText

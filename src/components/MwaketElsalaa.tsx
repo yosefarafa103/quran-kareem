@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import type { PrayersTimeResponse } from "../types/prayers"
 import { getNextPrayer } from '../utils/getNextPrayer'
 import { arabicPrayers, getRemainingToPray } from '../utils/getRemainingToPray'
+import Loader from './Loader'
 
 const MwaketElsalaa = () => {
     const getPrayerTimes = async () => {
@@ -33,24 +34,28 @@ const MwaketElsalaa = () => {
     }, [data]);
 
     return (
-        <div className='bg-green-50 p-[20px]'>
-            <section className='flex items-center justify-between '>
-                <div>{data?.date.date_hijri?.weekday?.ar} {data?.date.date_hijri?.month?.days} {data?.date.date_hijri?.month?.ar}</div>
-                <div></div>
-            </section>
-            {isLoading ? "انتظر جاري التحميل ..." : ""}
-            <div className='flex items-center gap-4 justify-between mt-10 border-solid border-2 border-green-300'>
-                {data && Object.keys(data?.prayer_times)?.map(time => (
-                    <div className='sm:p-4 flex-1 text-center border-solid border-2 border-transparent border-l-green-300 font-bold  p-1 sm:text-lg text-sm'>{time}</div>
-                ))}
-            </div>
-            <div className='flex items-center gap-4 justify-between border-solid border-2 border-black mt-2'>
-                {data && Object.values(data?.prayer_times)?.map((time, idx) => (
-                    <div className='sm:p-4 flex-1 text-center border-solid border-2 border-transparent border-l-black font-bold  p-1 sm:text-lg text-sm'>{time} {(idx === 0 || idx === 1) ? "ص" : "م"} </div>
-                ))}
-            </div>
-            {nextPray}
-        </div>
+        <>
+
+            {isLoading ? <Loader /> :
+                <div className='bg-green-50 p-[20px]'>
+                    <section className='flex items-center justify-between '>
+                        <div>{data?.date?.date_hijri?.weekday?.ar} {data?.date?.date_hijri?.month?.days} {data?.date?.date_hijri?.month?.ar}</div>
+                        <div></div>
+                    </section>
+                    <div className='flex items-center gap-4 justify-between mt-10 border-solid border-2 border-green-300'>
+                        {data && arabicPrayers.map(time => (
+                            <div className='sm:p-4 flex-1 text-center border-solid border-2 border-transparent border-l-green-300 font-bold  p-1 sm:text-lg text-sm'>{time}</div>
+                        ))}
+                    </div>
+                    <div className='flex items-center gap-4 justify-between border-solid border-2 border-black mt-2'>
+                        {data && Object.values(data?.prayer_times)?.map((time, idx) => (
+                            <div className='sm:p-4 whitespace-nowrap flex-1 text-center border-solid border-2 border-transparent border-l-black font-bold  p-1 sm:text-lg text-sm'>{time} {(idx === 0 || idx === 1) ? "ص" : "م"} </div>
+                        ))}
+                    </div>
+                </div>
+            }
+
+        </>
     )
 }
 
