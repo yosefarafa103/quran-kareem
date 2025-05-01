@@ -1,11 +1,11 @@
 import { useState } from "react";
 import azkar from "../data/azkar.json"
 import i18n from "../lib/i18n";
-import { Zekr, Zekr } from "../types/Azkar";
 import { AnimatePresence, motion } from "framer-motion";
+import { Zekr } from "../types/Azkar";
 const Azkar = () => {
     const [tab, setTab] = useState(0);
-    const filter: Zekr[] = azkar[Object.keys(azkar)[tab]]
+    const filter: Zekr[] = azkar[Object.keys(azkar)[tab]] as any
     console.log();
 
     return (
@@ -20,13 +20,13 @@ const Azkar = () => {
                 {/* <div className="font-bold text-xl border-solid border-2 border-transparent border-b-[#eee] pb-5 pr-3">{i18n.t(Object.keys(azkar)[tab])}</div> */}
             </section>
             {filter.map((item) => (
-                <Zekr  {...item} />
+                <ZekrItem  {...item} />
             ))}
         </>
     )
 }
 
-export function Zekr({ count, text }: Zekr) {
+export function ZekrItem({ count, text }: Zekr) {
     const [clicks, setClicks] = useState(0);
     return (
         <>
@@ -37,9 +37,9 @@ export function Zekr({ count, text }: Zekr) {
                         setClicks(clicks + 1)
                     }
                 }}
-                className={`relative px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg mt-2 ${count - clicks <= 0 && "hidden"} mb-[55px]`}
+                className={`relative px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg mt-2 ${count - clicks <= 0 && "hidden"} mb-[55px] select-none`}
             >
-                <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center`}>
+                <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center `}>
                     {text}
                 </div>
                 <span className="size-[40px] rounded-[50%] p-2 text-green-500 m-2 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[22px] absolute top-full right-0">{count - clicks}</span>

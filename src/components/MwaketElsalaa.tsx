@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import axios, { AxiosResponse } from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, } from 'react'
 import type { PrayersTimeResponse } from "../types/prayers"
-import { getNextPrayer } from '../utils/getNextPrayer'
-import { arabicPrayers, getRemainingToPray } from '../utils/getRemainingToPray'
+import { arabicPrayers, } from '../utils/getRemainingToPray'
 import Loader from './Loader'
 
 const MwaketElsalaa = () => {
@@ -15,21 +14,17 @@ const MwaketElsalaa = () => {
             throw new Error(err as any)
         }
     }
-    const [nextPray, setnextPray] = useState<string>("")
     const { data, isLoading } = useQuery({
         queryFn: getPrayerTimes,
         queryKey: ["mwaket_elsalaa"]
     });
     useEffect(() => {
         if (data) {
-            const prayersTime = Object.values(data?.prayer_times)
-            const prayers: string[] = Object.keys(data?.prayer_times)
-            const currentHour = new Date().getHours()
+            // const prayersTime = Object.values(data?.prayer_times)
+            // const prayers: string[] = Object.keys(data?.prayer_times)
+            // const currentHour = new Date().getHours()
             // setnextPray(getNextPrayer(prayersTime, prayers, currentHour))
-            const [_, currentPrayTime] = [prayersTime[prayers.indexOf(`${getNextPrayer(prayersTime, new Date().getHours())}`) - 1], prayersTime[prayers.indexOf(`${getNextPrayer(prayersTime, new Date().getHours())}`)]]
-            const { hours, minutes } = getRemainingToPray(currentHour.toString(), currentPrayTime);
-            arabicPrayers
-            setnextPray(`متبقي ${hours >= 1 ? `${hours} ساعة` : ""} و ${minutes} دقيقة علي اذان ${arabicPrayers[prayers.indexOf(`${getNextPrayer(prayersTime, new Date().getHours())}`)]}`)
+            // const [_, currentPrayTime] = [prayersTime[prayers.indexOf(`${getNextPrayer(prayersTime, new Date().getHours())}`) - 1], prayersTime[prayers.indexOf(`${getNextPrayer(prayersTime, new Date().getHours())}`)]]
         }
     }, [data]);
 

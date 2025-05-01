@@ -1,12 +1,11 @@
-import { memo, useMemo, useState } from "react"
+import { memo, useMemo, } from "react"
 import { Link } from "react-router";
 
 const ReadFromPage = () => {
-    const [filterdPage, setFilterdPage] = useState<string | null>(null);
-    const [page, setPage] = useState("");
+    // const [filterdPage, setFilterdPage] = useState<string | null>(null);
+    // const [page, setPage] = useState("");
 
     const pages = useMemo(() => new Array(604).fill("").map((_, i) => (i < 10 ? `00${i + 1}` : i < 100 ? `0${i + 1}` : `${i + 1}`)), []);
-    console.log(filterdPage);
     return (
         <>
 

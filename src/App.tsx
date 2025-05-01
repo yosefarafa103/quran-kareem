@@ -1,25 +1,35 @@
 import "./lib/i18n"
 import "./App.css"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
-import Home from "./components/Home"
-import Header from "./components/Header"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import MwaketElsalaa from "./components/MwaketElsalaa"
-import Quran from "./components/Quran"
-import ReadFromPage from "./components/ReadFromPage"
-import SurahByImage from "./components/SurahByImage"
-import SurahByName, { Wrapper } from "./components/SurahByName"
-import SurahText from "./components/SurahText"
-import Azkar from "./components/Azkar"
+import { Wrapper } from "./components/SurahByName"
+import { lazy, Suspense } from "react"
+import Loader from "./components/Loader"
+const Header = lazy(() => import("./components/Header"))
+const Home = lazy(() => import("./components/Home"))
+const Quran = lazy(() => import("./components/Quran"))
+const MwaketElsalaa = lazy(() => import("./components/MwaketElsalaa"))
+const ReadFromPage = lazy(() => import("./components/ReadFromPage"))
+const SurahText = lazy(() => import("./components/SurahText"))
+const SurahByImage = lazy(() => import("./components/SurahByImage"))
+const SurahByName = lazy(() => import("./components/SurahByName"))
+const Azkar = lazy(() => import("./components/Azkar"))
 const App = () => {
   const router = createBrowserRouter([
     {
       path: "/", element: (
         <>
-          <Header />
-          <main className="md:w-[calc(100%-150px)] mx-auto mt-1 sm:px-5">
-            <Outlet />
-          </main>
+          <Suspense fallback={<>
+            <Loader />
+            برجاء الانتظار ..
+          </>}>
+
+            <Header />
+            <main className="md:w-[calc(100%-150px)] mx-auto mt-1 sm:px-5">
+              <Outlet />
+            </main>
+          </Suspense>
+
         </>
       ),
       children: [{ path: "/", element: <Home /> }, {
@@ -56,6 +66,7 @@ const App = () => {
   return (
     <>
       <QueryClientProvider client={queryClient} >
+
         <RouterProvider router={router} />
       </QueryClientProvider>
     </>
