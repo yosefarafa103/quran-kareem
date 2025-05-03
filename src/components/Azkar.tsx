@@ -6,11 +6,9 @@ import { Zekr } from "../types/Azkar";
 const Azkar = () => {
     const [tab, setTab] = useState(0);
     const filter: Zekr[] = azkar[Object.keys(azkar)[tab]] as any
-    console.log();
-
     return (
         <>
-            <div className="flex items-center gap-3 whitespace-nowrap overflow-x-scroll pb-4">
+            <div className="flex items-center gap-3 whitespace-nowrap overflow-x-scroll pb-4 sticky top-0 bg-white z-[999] p-2">
                 {Object.keys(azkar).map((item, i) => (
                     <div onClick={() => setTab(i)} className={`p-3 cursor-pointer bg-[#eee] rounded-md hover:bg-[#ddd] ${tab === i ? "!bg-[#000] text-white" : ""}`}>{i18n.t(item)}</div>
                 ))}
@@ -19,9 +17,11 @@ const Azkar = () => {
                 className="grid md:grid-cols-4 pt-7 max-md:grid-cols-2 max-sm:grid-cols-1 gap-5">
                 {/* <div className="font-bold text-xl border-solid border-2 border-transparent border-b-[#eee] pb-5 pr-3">{i18n.t(Object.keys(azkar)[tab])}</div> */}
             </section>
-            {filter.map((item) => (
-                <ZekrItem  {...item} />
-            ))}
+            <section className="flex flex-wrap gap-4 p-5">
+                {filter.map((item) => (
+                    <ZekrItem  {...item} />
+                ))}
+            </section>
         </>
     )
 }
@@ -37,7 +37,7 @@ export function ZekrItem({ count, text }: Zekr) {
                         setClicks(clicks + 1)
                     }
                 }}
-                className={`relative px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg mt-2 ${count - clicks <= 0 && "hidden"} mb-[55px] select-none`}
+                className={`relative px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg mt-2 ${count - clicks <= 0 && "hidden"} mb-[55px] select-none w-full`}
             >
                 <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center `}>
                     {text}

@@ -5,7 +5,8 @@ import { useFetchQuery } from "../hooks/useFetchQuery";
 import data from "../data/quranSurahs.json"
 import Loader from "./Loader";
 import { useEffect, useRef, useState } from "react";
-
+import settings from "../assets/settings.svg"
+import { AnimatePresence, motion } from "framer-motion";
 const SurahText = () => {
     const [fontSize, setFontSize] = useState(18)
     let { id: surahName } = useParams()
@@ -21,33 +22,76 @@ const SurahText = () => {
     const ref = useRef<HTMLElement | null>(null)
     const { data: surah, isLoading } = useFetchQuery<SurahsAyahs[]>(getSurah, `Surah_Number_${surahName}`);
     const [currentAyah, setCurrentAyah] = useState<number | null>(getAyah.get("ayah") ? +getAyah.get("ayah")! : null)
+    const [bodyHeight, setBodyHeight] = useState<number | null>(0)
+    const [showSettings, setShowSettings] = useState<boolean | null>(false)
+    const [barHeight, setBarHeight] = useState<number | null>(0)
+    const [isAutoScrolling, setIsAutoScrolling] = useState<boolean | null>(false)
     useEffect(() => {
+        let myInterval;
+        if (isAutoScrolling) {
+            myInterval = setInterval(() => {
+                window.onscroll = () => {
+                    if (scrollY === bodyHeight) {
+                        return clearInterval(myInterval)
+                    }
+                }
+                setBarHeight(window.scrollY / bodyHeight * 100)
+                window.scrollBy({
+                    top: 1,
+                    behavior: "smooth"
+                })
+            }, 10);
+
+        }
+        if (ref.current) {
+            setBodyHeight(ref.current.clientHeight)
+        }
         if (getAyah.get("ayah") && data) {
             setTimeout(() => {
                 location.hash = `#${getAyah.get("ayah")}`
             }, 500);
         }
-    }, [])
-    console.log(surah);
+        return () => clearInterval(myInterval)
+    }, [surah, bodyHeight, isAutoScrolling])
 
     return (
         <>
+            <div onClick={() => setShowSettings(!showSettings)} className={`fixed transition-all duration-700 ${!showSettings ? "bottom-[20px]" : "bottom-[80px]"} right-4 bg-white p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer`}>
+                <img src={settings} className="size-[20px] " alt="" />
+            </div>
+            <div className="fixed w-[4px] bg-black left-1 top-[70px]" style={{ height: `${barHeight}vh` }} />
             {isLoading ? <Loader /> : <>
-                <div className="fixed bottom-0 w-full left-0 flex items-center justify-between bg-[#FFF] p-2 border-t-solid border-t-black border-t-2 pt-4">
-                    <div>
-                        <button onClick={() => {
-                            if (fontSize >= 18) {
-                                setFontSize(current => current -= 2)
-                            }
-                        }} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg">تصغير الخط</button>
-                        <button onClick={() => setFontSize(current => current += 2)} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg"> تكبير الخط</button>
-                    </div>
-                    <div>
-                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! - 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg"> السورة السابقة</Link>
-                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! + 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg"> السورة التالية</Link>
-                    </div>
-                </div>
-                <div className="text-center py-4 text-xl border-solid border-2 border-green-300 mx-1 mb-4">سورة {data[+surahName! - 1].name}</div>
+                <AnimatePresence>
+                    {showSettings &&
+                        <>
+
+                            <motion.div
+                                initial={{ marginBottom: -100 }}
+                                animate={{ marginBottom: 0 }}
+                                transition={{ duration: .7 }}
+                                exit={{ marginBottom: -100 }}
+                                className="fixed bottom-0 w-full left-0 flex items-center justify-between bg-[#FFF] p-2 border-t-solid border-t-black border-t-2 pt-4">
+                                <div className="flex justify-between items-center" >
+                                    <div>
+                                        <button onClick={() => {
+                                            if (fontSize >= 18) {
+                                                setFontSize(current => current -= 2)
+                                            }
+                                        }} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2">تصغير الخط</button>
+                                        <button onClick={() => setFontSize(current => current += 2)} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> تكبير الخط</button>
+                                    </div>
+                                    <div>
+                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! - 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة السابقة</Link>
+                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! + 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة التالية</Link>
+                                    </div>
+                                </div>
+                                <button onClick={() => setIsAutoScrolling(!isAutoScrolling)} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 absolute top-[-50px] left-2">تفعيل الانزلاق التلقائي</button>
+
+                            </motion.div>
+                        </>
+                    }
+                </AnimatePresence>
+                <div className="text-center py-4 text-xl border-solid border-2 border-green-300 bg-white mx-1 mb-4 sticky top-0">سورة {data[+surahName! - 1].name}</div>
                 <section ref={ref} className="p-3 pb-[70px]">
                     <JuzItem font={fontSize} juzNum={Number(surah![0]?.juz_id)} />
                     {
@@ -93,7 +137,7 @@ export function EndDuaa({ font, title }: { title?: string, font: number }) {
 }
 export function JuzItem({ juzNum, font }: { font: number, juzNum: number }) {
     return (
-        <div style={{ fontSize: font * 1.2 }} className="block w-full p-3 sticky top-2 bg-white text-center rounded-lg border-2 border-solid border-black my-4 text-black z-[999] mt-1"> الجزء {juzNum}</div>
+        <div style={{ fontSize: font * 1.2 }} className="block w-full p-3 sticky top-[70px] bg-white text-center rounded-lg border-2 border-solid border-black my-4 text-black z-[999] mt-1"> الجزء {juzNum}</div>
     )
 }
 export default SurahText
