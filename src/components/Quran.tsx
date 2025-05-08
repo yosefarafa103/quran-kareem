@@ -1,17 +1,21 @@
+import { useContext } from "react"
 import { Link, useNavigate } from "react-router"
+import { ThemeContext } from "../context/ThemeContext"
 
 const Quran = () => {
+    const { theme } = useContext(ThemeContext)
     const navigate = useNavigate()
     return (
         <div>
             <section className="flex items-center gap-2">
-                <Link to={`by-surahs`} className="p-3 cursor-pointer bg-[#eee] rounded-md hover:bg-[#ddd]">قراءه عن طريق الايات</Link>
-                <Link to={`by-page`} className="p-3 cursor-pointer bg-[#eee] rounded-md hover:bg-[#ddd]">قراءه عن طريق الصفحات</Link>
+                {[{ name: "قراءه عن طريق الايات", href: "by-surahs" }, { name: "قراءه عن طريق الصفحات", href: "by-page" }].map((el) => (
+                    <Link to={`${el.href}`} className={`p-3 cursor-pointer border-solid border-2 border-transparent bg-[${theme === "Dark" ? "#444" : "#eee"}] ${theme === "Dark" && "text-white"} rounded-md hover:bg-[#ddd] mt-3 ${theme === "Dark" ? "border-light" : "border-dark"}`}>{el.name}</Link>
+                ))}
                 {localStorage.getItem("last_ayah") &&
                     <div onClick={() => {
                         const localS = JSON.parse(localStorage.getItem("last_ayah")!)
                         navigate(`by-surahs/${localS.surahName}?ayah=${localS.ayahNumber}`)
-                    }} className="p-3 cursor-pointer bg-[#eee] rounded-md hover:bg-[#ddd]">اخر اية تم قرائتها</div>
+                    }} className={`p-3 cursor-pointer rounded-md hover:bg-[#ddd] mt-3 bg-[${theme === "Dark" ? "#444" : "#eee"}] ${theme === "Dark"? "border-light": "border-dark"} `}>اخر اية تم قرائتها</div>
                 }
             </section>
         </div>

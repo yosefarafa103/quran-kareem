@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import azkar from "../data/azkar.json"
 import i18n from "../lib/i18n";
 import { AnimatePresence, motion } from "framer-motion";
 import { Zekr } from "../types/Azkar";
+import { ThemeContext } from "../context/ThemeContext";
+import { colors } from "../constants/colors";
 const Azkar = () => {
+    const { theme } = useContext(ThemeContext)
+
     const [tab, setTab] = useState(0);
     const filter: Zekr[] = azkar[Object.keys(azkar)[tab]] as any
     return (
         <>
             <div className="flex items-center gap-3 whitespace-nowrap overflow-x-scroll pb-4 sticky top-0 bg-white z-[999] p-2">
                 {Object.keys(azkar).map((item, i) => (
-                    <div onClick={() => setTab(i)} className={`p-3 cursor-pointer bg-[#eee] rounded-md hover:bg-[#ddd] ${tab === i ? "!bg-[#000] text-white" : ""}`}>{i18n.t(item)}</div>
+                    <div style={{ backgroundColor: theme === "Dark" ? `${colors.dark.green}` : colors.light.green, color: theme === "Light" ? colors.dark.text : colors.light.text }} onClick={() => setTab(i)} className={`p-3 cursor-pointer bg-[#eee] transition-all duration-500 rounded-md hover:bg-[#ddd] ${tab === i ? "!bg-[#bbb] text-white" : ""}`}>{i18n.t(item)}</div>
                 ))}
             </div>
             <section

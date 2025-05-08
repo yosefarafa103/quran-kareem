@@ -1,8 +1,32 @@
 @import "tailwindcss";
+
+:root {
+  --green: "#f0fdf4";
+}
 body {
   direction: rtl;
   font-family: "Amiri", serif;
 }
 html {
   scroll-behavior: smooth;
+}
+
+main {
+  &.light {
+    color: black !important;
+    background-color: var(--green) !important;
+  }
+  &.dark {
+    color: white !important;
+    background-color: black !important;
+  }
+}
+.border-light {
+  border: 1px solid #eee;
+}
+.black-bg {
+  background-color: red;
+}
+.border-dark {
+  border-color: 1px solid #000;
 }
