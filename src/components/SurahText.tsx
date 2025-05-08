@@ -6,9 +6,9 @@ import data from "../data/quranSurahs.json"
 import Loader from "./Loader";
 import { useContext, useEffect, useRef, useState } from "react";
 import settings from "../assets/settings.svg"
-import { AnimatePresence, motion, number } from "framer-motion";
+import { AnimatePresence, motion, } from "framer-motion";
 import { ThemeContext } from "../context/ThemeContext";
-import { Theme, themeType } from "../types/theme";
+import {  themeType } from "../types/theme";
 const SurahText = () => {
     const { theme } = useContext(ThemeContext)
     const [fontSize, setFontSize] = useState(18)
@@ -76,8 +76,6 @@ const SurahText = () => {
         }
         return () => clearInterval(myInterval)
     }, [surah, bodyHeight, isAutoScrolling])
-    // console.log(surah[0].text.slice(38));
-
     return (
         <>
             <div onClick={() => setShowSettings(!showSettings)} className={`fixed transition-all duration-700 ${!showSettings ? "bottom-[20px]" : "bottom-[80px]"} right-4 bg-white p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer`}>

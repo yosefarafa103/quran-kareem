@@ -1,12 +1,11 @@
 import "./lib/i18n"
 import "./App.css"
-import { BrowserRouter, createBrowserRouter, Outlet, Route, RouterProvider, Routes } from "react-router-dom"
+import { BrowserRouter, Route,  Routes } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Wrapper } from "./components/SurahByName"
-import { lazy, Suspense, useContext, useEffect, useState } from "react"
+import { lazy, Suspense, useContext, } from "react"
 import Loader from "./components/Loader"
-import Compass from "./components/Compass"
-import ThemeWrapper, { ThemeContext } from "./context/ThemeContext"
+import { ThemeContext } from "./context/ThemeContext"
 import { Theme } from "./types/theme"
 const Header = lazy(() => import("./components/Header"))
 const Home = lazy(() => import("./components/Home"))
@@ -42,7 +41,6 @@ const App = () => {
                     }
                   />
                   <Route path="/quran/by-surahs/:id" element={<SurahText />} />
-                  <Route path="/compass" element={<Compass />} />
                   <Route path="/prayer-times" element={<MwaketElsalaa />} />
                   <Route path="/azkar" element={<Azkar />} />
                 </Routes>
