@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router"
 import { ThemeContext } from "../context/ThemeContext"
 
 const Quran = () => {
-    const { theme } = useContext(ThemeContext)
+    const { theme  } = useContext(ThemeContext)
     const navigate = useNavigate()
     return (
         <div>

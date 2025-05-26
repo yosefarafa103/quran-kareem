@@ -5,21 +5,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Zekr } from "../types/Azkar";
 import { ThemeContext } from "../context/ThemeContext";
 import { colors } from "../constants/colors";
+import { Button } from "./ui/button";
 const Azkar = () => {
-    const { theme } = useContext(ThemeContext)
 
     const [tab, setTab] = useState(0);
     const filter: Zekr[] = azkar[Object.keys(azkar)[tab]] as any
     return (
         <>
-            <div className="flex items-center gap-3 whitespace-nowrap overflow-x-scroll pb-4 sticky top-0 bg-white z-[999] p-2">
+            <div className="flex items-center gap-3 whitespace-nowrap overflow-x-scroll pb-4 sticky top-0 bg-background z-[10] p-2">
                 {Object.keys(azkar).map((item, i) => (
-                    <div style={{ backgroundColor: theme === "Dark" ? `${colors.dark.green}` : colors.light.green, color: theme === "Light" ? colors.dark.text : colors.light.text }} onClick={() => setTab(i)} className={`p-3 cursor-pointer bg-[#eee] transition-all duration-500 rounded-md hover:bg-[#ddd] ${tab === i ? "!bg-[#bbb] text-white" : ""}`}>{i18n.t(item)}</div>
+                    <Button onClick={() => setTab(i)} className={`p-3 cursor-pointer  transition-all duration-500 rounded-md hover:bg-primary ${tab === i ? "!bg-[#bbb] text-white" : ""}`}>{i18n.t(item)}</Button>
                 ))}
             </div>
             <section
                 className="grid md:grid-cols-4 pt-7 max-md:grid-cols-2 max-sm:grid-cols-1 gap-5">
-                {/* <div className="font-bold text-xl border-solid border-2 border-transparent border-b-[#eee] pb-5 pr-3">{i18n.t(Object.keys(azkar)[tab])}</div> */}
             </section>
             <section className="flex flex-wrap gap-4 p-5">
                 {filter.map((item) => (
