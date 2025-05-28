@@ -7,6 +7,7 @@ export const SearchInSurahsContext: Context<searchContextType> = createContext<s
 
 const SearchInSurahContext = ({ children }: { children: ReactNode }) => {
     const [value, setValue] = useState("");
+    console.log(value);
     return (
         <SearchInSurahsContext.Provider value={{ setValue, value }}>
             {children}

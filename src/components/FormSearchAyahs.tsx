@@ -21,7 +21,7 @@ import {
 import { Button } from "./ui/button"
 import { Dispatch, SetStateAction } from "react"
 
-const FormSearchAyahs = ({ setOpen, isOpen, setSearchedAyah }: { setSearchedAyah: Dispatch<SetStateAction<string>>, setOpen: () => void, isOpen: boolean }) => {
+const FormSearchAyahs = ({ setOpen, isOpen, setSearchedAyah, }: { setSearchedAyah: Dispatch<SetStateAction<string>>, setOpen: () => void, isOpen: boolean }) => {
     const formSchema = z.object({
         searchValue: z.string({ message: "اكتب الاية المراد البحث عنها " }).min(1, { message: "حقل اجباري" })
     });
@@ -34,6 +34,7 @@ const FormSearchAyahs = ({ setOpen, isOpen, setSearchedAyah }: { setSearchedAyah
             { JSON.stringify(values, null, 2) }
             setSearchedAyah(values.searchValue)
             setOpen(false)
+
         } catch (error) {
             console.error("Form submission error", error);
             // "Failed to submit the form. Please try again."

@@ -52,6 +52,7 @@ const SurahText = () => {
             return ltr.replace(ltr, arabicItem!?.arabic)
         }).join(""))[0];
     }, []);
+
     const suraah = useMemo<S>(() => quran[+surahName - 1], [surahName])
     useEffect(() => {
         let myInterval: NodeJS.Timeout;
@@ -85,11 +86,12 @@ const SurahText = () => {
     const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
     useEffect(() => {
         window.scroll({ top: 0, behavior: "instant" })
-    }, [])
+    }, [suraah])
     useEffect(() => {
         setFilterdAyah(suraah.ayahs.filter((a) => a.text.replace(/[\u064B-\u0652]/g, '').includes(searchedAyah)
         ))
     }, [searchedAyah])
+    console.log(searchedAyah, searchedAyah.replaceAll(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ""));
     const handelSelectAyah = useCallback((ayahNum: string) => {
         setSearchedAyah("")
         setTimeout(() => {
@@ -185,7 +187,7 @@ const SurahText = () => {
             </AnimatePresence>
             <div
                 style={{ backgroundColor: theme === "Dark" ? "#000" : "#eee" }}
-                className="text-center transition-all duration-700 py-4 pt-5 text-xl border-solid border-2 border-green-300 bg-white mx-1 mb-4 sticky top-[70px]"> {suraah!?.name}</div>
+                className="text-center transition-all duration-700 py-4 pt-3 text-lg border-solid border-2 border-green-300 bg-white w-[95%] rounded-xl mx-auto mb-4 sticky top-[70px]"> {suraah!?.name}</div>
             <section ref={ref} className="mb-2 pb-[70px] px-[22px] text-center">
                 <JuzItem font={fontSize} theme={theme} juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")} />
                 {
