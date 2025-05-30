@@ -79,6 +79,7 @@ const SurahText = () => {
             setTimeout(() => {
                 location.hash = `#${getAyah.get("ayah")}`
             }, 500);
+            setCurrentAyah(+getAyah.get("ayah"))
         }
         return () => clearInterval(myInterval)
     }, [bodyHeight, isAutoScrolling,]);
@@ -87,7 +88,7 @@ const SurahText = () => {
     const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
     useEffect(() => {
         window.scroll({ top: 0, behavior: "instant" })
-        setCurrentAyah(null)
+        // setCurrentAyah("")
     }, [suraah])
     useEffect(() => {
         localStorage.setItem("font_size", `${fontSize}`)
