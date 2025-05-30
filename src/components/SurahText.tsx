@@ -13,9 +13,10 @@ import { Search } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import FormSearchAyahs from "./FormSearchAyahs";
 import { Separator } from "./ui/separator";
+import { useFilterAyah } from "@/hooks/useFilterAyah";
 const SurahText = () => {
     const { theme } = useContext<Theme>(ThemeContext)
-    const [fontSize, setFontSize] = useState(18)
+    const [fontSize, setFontSize] = useState(() => +localStorage.getItem("font_size") || 18)
     let { id: surahName } = useParams()
     const getSurah = async () => {
         try {
@@ -86,12 +87,16 @@ const SurahText = () => {
     const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
     useEffect(() => {
         window.scroll({ top: 0, behavior: "instant" })
+        setCurrentAyah(null)
     }, [suraah])
+    useEffect(() => {
+        localStorage.setItem("font_size", `${fontSize}`)
+    }, [fontSize])
     useEffect(() => {
         setFilterdAyah(suraah.ayahs.filter((a) => a.text.replace(/[\u064B-\u0652]/g, '').includes(searchedAyah)
         ))
     }, [searchedAyah])
-    console.log(searchedAyah, searchedAyah.replaceAll(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ""));
+    // console.log(searchedAyah, searchedAyah.replaceAll(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ""));
     const handelSelectAyah = useCallback((ayahNum: string) => {
         setSearchedAyah("")
         setTimeout(() => {
@@ -99,7 +104,7 @@ const SurahText = () => {
             setCurrentAyah(+ayahNum);
         }, 1000);
     }, [])
-
+    // const { filterdData } = useFilterAyah({ isInSurah: true, searchedAyah, surahNumber: +surahName })
     return (
         <>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -136,7 +141,6 @@ const SurahText = () => {
                                     نتائج
                                 `
                                     : "لم يتم العثور علي نتائج"}
-
                             </div>
                             <Button variant={"default"} onClick={() => setSearchedAyah("")}>رجوع</Button>
                         </div>
@@ -161,7 +165,7 @@ const SurahText = () => {
                             animate={{ marginBottom: 0 }}
                             transition={{ duration: .7 }}
                             exit={{ marginBottom: -100 }}
-                            className="fixed bottom-0 w-full left-0 flex items-center justify-between bg-[#FFF] p-2 border-t-solid border-t-black border-t-2 pt-4">
+                            className="fixed bottom-0 w-full left-0 flex items-center justify-between bg-[#FFF] p-2 border-t-solid border-t-black border-t-2 pt-4 z-[9999999999] ">
                             <div className="flex justify-between items-center overflow-x-scroll whitespace-nowrap" >
                                 <div>
                                     <Button onClick={() => {
@@ -187,7 +191,7 @@ const SurahText = () => {
             </AnimatePresence>
             <div
                 style={{ backgroundColor: theme === "Dark" ? "#000" : "#eee" }}
-                className="text-center transition-all duration-700 py-4 pt-3 text-lg border-solid border-2 border-green-300 bg-white w-[95%] rounded-xl mx-auto mb-4 sticky top-[70px]"> {suraah!?.name}</div>
+                className="text-center z-[20] transition-all duration-700 py-2 pt-3 text-lg border-solid border-2 border-green-300 bg-white w-[90%] rounded-xl mx-auto mb-2 sticky top-[60px]"> {suraah!?.name}</div>
             <section ref={ref} className="mb-2 pb-[70px] px-[22px] text-center">
                 <JuzItem font={fontSize} theme={theme} juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")} />
                 {
@@ -202,10 +206,16 @@ const SurahText = () => {
                                     localStorage.setItem("last_ayah", JSON.stringify({ surahName, ayahNumber: idx + 1 }))
                                 }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2.5] text-lg inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
                                     {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.text}
-                                    <span style={{ fontSize: fontSize }} className="size-[40px] rounded-[50%] p-2 text-green-500 m-2 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
+                                    <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
                                 </div>
                                 {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz &&
                                     <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
+                                }
+                                {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
+                                    // <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((suraah.ayahs[idx]?.page)))} theme={theme} />
+                                    <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
+                                        <div className={`flex items-center justify-center size-[30px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
+                                    </div>
                                 }
                             </>
                         )
@@ -235,7 +245,7 @@ export function EndDuaa({ font, title }: { title?: string, font: number, }) {
 }
 export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string, theme?: themeType }) {
     return (
-        <div style={{ fontSize: font * 1.2, backgroundColor: theme === "Dark" ? "#000" : "#eee" }} className={`block w-full p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-4 text-black z-[9] mt-1 ${theme === "Dark" && "text-white border-light"}`}> الجزء {juzNum}</div>
+        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid z-[10] border-black my-2 text-black mt-1`}> الجزء {juzNum}</div>
     )
 }
 export default SurahText

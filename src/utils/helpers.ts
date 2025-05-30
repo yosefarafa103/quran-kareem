@@ -1,7 +1,7 @@
 export function removeTashkil(val: string): string {
-  return val.replace(/[\u064B-\u0652-\u065F\u06D6-\u06ED\u0610-\u061A]/g, "");
+  return val.replace(/[\u064B-\u0652]/g, "");
 }
-// \u0610-\u061A\u064B-\u065F\u06D6-\u06ED
+// /[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/
 export const replaceNumsEnglishToArabic = (ayahNum: string) => {
   const numbers = [
     { arabic: "٠", english: "0" },

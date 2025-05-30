@@ -41,15 +41,7 @@ function Header() {
     }, [mode, isDark, theme])
     return (
         <>
-            {/* <AnimatePresence>
-                {!isOnline &&
-                    <motion.div
-                        initial={{ marginTop: -20 }}
-                        animate={{ marginTop: 0 }}
-                        exit={{ marginTop: -20 }}
-                        className="p-5 text-center bg-red-500 text-white font-bold sticky top-0 left-0 z-[88888]">انت غير متصل بالانترنت</motion.div>
-                }
-            </AnimatePresence> */}
+
             <Dialog >
                 <DialogContent dir="rtl">
                     <DialogHeader >

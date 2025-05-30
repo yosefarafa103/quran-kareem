@@ -27,9 +27,12 @@ export function useFilterAyah({
     return o;
   }, [])();
   if (isInSurah) {
-    //   suraah.ayahs.filter((a) =>
-    //     a.text.replace(/[\u064B-\u0652]/g, "").includes(searchedAyah)
-    //   );
+    setFilterData(
+      quran[surahNumber].ayahs.filter((a) =>
+        a.text.replace(/[\u064B-\u0652]/g, "").includes(searchedAyah)
+      )
+    );
+    return { filterdData };
   }
   const ayahs = useMemo(() => {
     return (

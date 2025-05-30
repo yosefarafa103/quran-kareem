@@ -7,6 +7,7 @@ import { lazy, Suspense, useContext, } from "react"
 import Loader from "./components/Loader"
 import { ThemeContext } from "./context/ThemeContext"
 import { Theme } from "./types/theme"
+import Sebha from "./components/Sebha"
 const Header = lazy(() => import("./components/Header"))
 const Home = lazy(() => import("./components/Home"))
 const Quran = lazy(() => import("./components/Quran"))
@@ -26,7 +27,7 @@ const App = () => {
         <BrowserRouter>
           <Suspense fallback={<><Loader /> برجاء الانتظار ..</>}>
             <Header />
-            <main style={{ fontSize: localStorage.getItem("font_size") ? localStorage.getItem("font_size") : "16px", fontFamily: localStorage.getItem("font_type") ? localStorage.getItem("font_type") : "cairo" }} className={`${theme?.theme === "Dark" ? "dark" : "light"} transition-all duration-500`}>
+            <main style={{ fontSize: localStorage.getItem("font_size") ? `${+localStorage.getItem("font_size")}px` : "16px", fontFamily: localStorage.getItem("font_type") ? localStorage.getItem("font_type") : "othmany" }} className={`${theme?.theme === "Dark" ? "dark" : "light"} transition-all duration-500`}>
               <section className="md:w-[calc(100%-150px)] min-h-screen mx-auto sm:px-5  border-x-2 border-x-primary">
                 <Routes>
                   <Route element={<Outlet />}>
@@ -45,6 +46,7 @@ const App = () => {
                     <Route path="/quran/by-surahs/:id" element={<SurahText />} />
                     <Route path="/prayer-times" element={<MwaketElsalaa />} />
                     <Route path="/azkar" element={<Azkar />} />
+                    <Route path="/sebha" element={<Sebha />} />
                   </Route>
                 </Routes>
               </section>

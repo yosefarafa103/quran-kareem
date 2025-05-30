@@ -6,6 +6,7 @@ import { Zekr } from "../types/Azkar";
 import { ThemeContext } from "../context/ThemeContext";
 import { colors } from "../constants/colors";
 import { Button } from "./ui/button";
+import { replaceNumsEnglishToArabic } from "@/utils/helpers";
 const Azkar = () => {
 
     const [tab, setTab] = useState(0);
@@ -28,8 +29,8 @@ const Azkar = () => {
         </>
     )
 }
-
-export function ZekrItem({ count, text }: Zekr) {
+type Z = Zekr & { handlingClickFN: () => void }
+export function ZekrItem({ count, text, handlingClickFN }: Z) {
     const [clicks, setClicks] = useState(0);
     return (
         <>
@@ -39,13 +40,16 @@ export function ZekrItem({ count, text }: Zekr) {
                     if (count - clicks > 0) {
                         setClicks(clicks + 1)
                     }
+                    if (handlingClickFN) {
+                        handlingClickFN()
+                    }
                 }}
-                className={`relative px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg mt-2 ${count - clicks <= 0 && "hidden"} mb-[55px] select-none w-full`}
+                className={`relative block px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg my-2 ${count - clicks <= 0 && "hidden"} mb-[65px] select-none w-full`}
             >
                 <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center `}>
                     {text}
                 </div>
-                <span className="size-[40px] rounded-[50%] p-2 text-green-500 m-2 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[22px] absolute top-full right-0">{count - clicks}</span>
+                <span className="size-[40px] rounded-[50%] p-2 text-green-500 m-2 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[22px] absolute top-full right-0">{replaceNumsEnglishToArabic((count - clicks) + "")}</span>
                 <AnimatePresence>
                     {count - clicks === 0 &&
                         <motion.span

@@ -28,7 +28,6 @@ const SurahByName = () => {
             setIsSearched(true)
         }
     }, [isOpen])
-    console.log(filterdData);
     return (
         <section>
             <AnimatePresence>

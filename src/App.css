@@ -38,6 +38,11 @@
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
 }
+/* Othmani.ttf */
+@font-face {
+  font-family: othmany;
+  src: url(./assets/fonts/4_3.otf);
+}
 @font-face {
   font-family: amiri;
   src: url(./assets/fonts/Amiri-Regular.ttf);
@@ -48,7 +53,7 @@
 }
 @font-face {
   font-family: cairo;
-  src: url(./assets/fonts/Cairo-VariableFont_slnt,wght.ttf);
+  src: url(./assets/fonts/Cairo-VariableFont_slntwght.ttf);
 }
 @font-face {
   font-family: tajawal;

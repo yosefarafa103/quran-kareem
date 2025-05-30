@@ -147,6 +147,7 @@ export default function PopupSettingsForm() {
                                     <SelectItem value="tajawal "> خط تجوال</SelectItem>
                                     <SelectItem value="amiri"> خط أميري</SelectItem>
                                     <SelectItem value="almarai "> خط المراعي</SelectItem>
+                                    <SelectItem value="othmany "> خط العثماني</SelectItem>
                                 </SelectContent>
                             </Select>
 
