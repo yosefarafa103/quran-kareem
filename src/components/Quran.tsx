@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router"
 import { ThemeContext } from "../context/ThemeContext"
 
 const Quran = () => {
-    const { theme  } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext)
     const navigate = useNavigate()
     return (
         <div>
@@ -15,7 +15,7 @@ const Quran = () => {
                     <div onClick={() => {
                         const localS = JSON.parse(localStorage.getItem("last_ayah")!)
                         navigate(`by-surahs/${localS.surahName}?ayah=${localS.ayahNumber}`)
-                    }} className={`p-3 text-sm cursor-pointer rounded-md hover:bg-[#ddd] mt-3 bg-[${theme === "Dark" ? "#444" : "#eee"}] ${theme === "Dark"? "border-light": "border-dark"} `}>اخر اية تم قرائتها</div>
+                    }} className={`p-3 text-sm cursor-pointer rounded-md hover:bg-[#ddd] mt-3 bg-[${theme === "Dark" ? "#444" : "#eee"}] ${theme === "Dark" ? "border-light" : "border-dark"} `}>اخر اية تم قرائتها</div>
                 }
             </section>
         </div>

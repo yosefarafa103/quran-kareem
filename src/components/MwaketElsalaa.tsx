@@ -7,10 +7,11 @@ import Loader from './Loader'
 import { Theme } from '../types/theme'
 import { ThemeContext } from '../context/ThemeContext'
 import { colors } from '../constants/colors'
+import { useIsOnline } from '@/hooks/useIsOnline'
 
 const MwaketElsalaa = () => {
     const { theme } = useContext<Theme>(ThemeContext)
-
+    const { isOnline } = useIsOnline()
     const getPrayerTimes = async () => {
         try {
             const data: AxiosResponse<PrayersTimeResponse> = await axios.get(`https://alquran.vip/APIs/getPrayerTimes`);
@@ -25,7 +26,7 @@ const MwaketElsalaa = () => {
     });
     return (
         <>
-            {isLoading ? <Loader /> :
+            {isLoading ? <Loader /> : isOnline ?
                 <div style={{ backgroundColor: theme === "Dark" ? `${colors.dark.green}` : colors.light.green, color: theme !== "Dark" ? colors.dark.text : colors.light.text }} className={`p-[20px]`}>
                     <section className='flex items-center justify-between '>
                         <div>{data?.date?.date_hijri?.weekday?.ar} {data?.date?.date_hijri?.month?.number} {data?.date?.date_hijri?.month?.ar}</div>
@@ -36,12 +37,13 @@ const MwaketElsalaa = () => {
                             <div className='sm:p-4 flex-1 text-center border-solid border-2 border-transparent border-l-green-300 font-bold  p-1 sm:text-lg text-sm'>{time}</div>
                         ))}
                     </div>
-                    <div style={{ borderColor: `${theme === "Dark" ? "#fff" : "#000"}` }}  className='flex items-center gap-4 justify-between border-solid border-2  mt-2'>
+                    <div style={{ borderColor: `${theme === "Dark" ? "#fff" : "#000"}` }} className='flex items-center gap-4 justify-between border-solid border-2  mt-2'>
                         {data && Object.values(data?.prayer_times)?.map((time, idx) => (
                             <div style={{ borderLeftColor: `${theme === "Dark" ? "#fff" : "#000"}` }} className='sm:p-4 whitespace-nowrap flex-1 text-center border-solid border-2 border-transparent  font-bold  p-1 sm:text-lg text-sm'>{time} {(idx === 0 || idx === 1) ? "ص" : "م"} </div>
                         ))}
                     </div>
                 </div>
+                : "لا يتوفر انترنت"
             }
 
         </>
