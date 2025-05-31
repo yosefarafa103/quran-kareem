@@ -182,7 +182,7 @@ export default function PopupSettingsForm() {
                 {/* {!data?.reciters ? <Loader /> :
                     <ComboboxReciter data={data?.reciters!} />
                 } */}
-                <Button type="submit" className="block">Submit</Button>
+                <Button type="submit" className="block">حفظ</Button>
             </form>
         </Form>
     )

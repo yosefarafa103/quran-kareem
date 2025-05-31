@@ -29,8 +29,8 @@ const Azkar = () => {
         </>
     )
 }
-type Z = Zekr & { handlingClickFN: () => void }
-export function ZekrItem({ count, text, handlingClickFN }: Z) {
+type Z = Zekr & { handlingClickFN: () => void, }
+export function ZekrItem({ count, text, handlingClickFN, }: Z) {
     const [clicks, setClicks] = useState(0);
     return (
         <>
@@ -44,7 +44,9 @@ export function ZekrItem({ count, text, handlingClickFN }: Z) {
                         handlingClickFN()
                     }
                 }}
+
                 className={`relative block px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg my-2 ${count - clicks <= 0 && "hidden"} mb-[65px] select-none w-full`}
+                style={{ fontSize: localStorage.getItem("font_size") + "px", }}
             >
                 <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center `}>
                     {text}
@@ -56,6 +58,8 @@ export function ZekrItem({ count, text, handlingClickFN }: Z) {
                             initial={{ y: 12, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.5 }}
+                            style={{ fontSize: localStorage.getItem("font_size") + "px", }}
+
                             className="size-[30px] w-[50px] py-4 bg-green-400 text-white m-2 border-solid inline-flex items-center justify-center text-[18px] absolute top-full left-0">تم</motion.span>
                     }
                 </AnimatePresence>
