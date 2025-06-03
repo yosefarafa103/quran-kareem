@@ -4,7 +4,8 @@ import { ThemeContext } from "../context/ThemeContext"
 
 const Quran = () => {
     const { theme } = useContext(ThemeContext)
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    
     return (
         <div>
             <section className="flex items-center gap-2 whitespace-nowrap max-sm:overflow-x-scroll">

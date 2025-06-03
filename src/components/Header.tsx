@@ -18,12 +18,11 @@ import {
     DialogTrigger,
 } from "./ui/dialog";
 
-import PopupSettingsForm from "./PopupSettingsForm";
 import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
 import { AnimatePresence, motion } from "framer-motion";
-import ConnectedInternet from "./ConnectedInternet";
 function Header() {
+    
     const { isOnline } = useIsOnline()
     const { setTheme, theme } = useContext(ThemeContext) as Theme
     const [mode, setMode] = useState<themeType>((): themeType => localStorage.getItem("theme") as themeType || theme)
@@ -41,14 +40,12 @@ function Header() {
     }, [mode, isDark, theme])
     return (
         <>
-
             <Dialog >
                 <DialogContent dir="rtl">
                     <DialogHeader >
                         <DialogTitle dir="ltr" className="mb-4 text-xl" >الاعدادات</DialogTitle>
                     </DialogHeader>
 
-                    <PopupSettingsForm />
                 </DialogContent>
                 <DropdownMenu dir="rtl">
                     <section style={{ backgroundColor: isDark === true ? `${colors.dark.green}` : colors.light.green, color: isDark === false ? colors.dark.text : colors.light.text }} className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300`}>
@@ -94,9 +91,9 @@ function Header() {
                                 {/* <NavLink to={`${lnk.route}`} className={`border-b-[#ddd] w-full pb-4 pr-5 border-solid border-b-[1px]`}></NavLink> */}
                             </DropdownMenuItem>
                         ))}
-                        <DropdownMenuItem>
+                        {/* <DropdownMenuItem>
                             <DialogTrigger className="w-full text-right cursor-pointer" >الاعدادات</DialogTrigger>
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         {/* <HeaderMobileScreens /> */}
                     </DropdownMenuContent>
                 </DropdownMenu>

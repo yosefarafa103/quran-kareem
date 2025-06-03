@@ -7,4 +7,5 @@ export const LINKS: LinkType[] = [
   { name: "مواقيت الصلاة", route: "/prayer-times" },
   { name: "الاذكار", route: "/azkar" },
   { name: "السبحة", route: "/sebha" },
+  { name: "الاعدادات", route: "/settings" },
 ];

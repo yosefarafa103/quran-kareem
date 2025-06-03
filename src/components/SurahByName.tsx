@@ -24,15 +24,16 @@ const SurahByName = () => {
     const { filterdData } = useFilterAyah({ isInSurah: false, searchedAyah })
     useEffect(() => {
         setFilter(quran?.filter((el) => removeTashkil(el.name)?.includes((value))))
-        if (isOpen) {
-            setIsSearched(true)
-        }
+        if (isOpen) setIsSearched(true)
     }, [isOpen]);
     useEffect(() => {
         setFilter(quran?.filter((el) => removeTashkil(el?.name)?.includes(value)), value);
     }, [value])
+    console.log(quran.filter((e) => e.ayahs.length >= 199)
+        .map((e) => e.ayahs.length)
+    );
 
-
+    
     return (
         <section>
             <AnimatePresence>

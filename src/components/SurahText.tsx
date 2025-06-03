@@ -1,33 +1,27 @@
-import axios, { AxiosResponse } from "axios";
 import { Link, useParams, useSearchParams } from "react-router"
-import { Surah, SurahsAyahs, } from "../types/quranSurahs";
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Surah, } from "../types/quranSurahs";
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import settings from "../assets/settings.svg"
 import { AnimatePresence, motion, } from "framer-motion";
 import { ThemeContext } from "../context/ThemeContext";
 import { Theme, themeType } from "../types/theme";
 import { Button } from "./ui/button";
 import { quran } from "@/constants/quran"
+import tafsirat, { TafsirItem } from "@/constants/tafsirs"
 import { S } from "../constants/quran"
 import { Search } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import FormSearchAyahs from "./FormSearchAyahs";
 import { Separator } from "./ui/separator";
-import { useFilterAyah } from "@/hooks/useFilterAyah";
+import Sajda from "@/assets/images/bismillah.png"
+import FilterPopupWrapper from "./FilterPopupWrapper";
+import TafsirPopup from "./TafsirPopup";
+type TafserItem = Pick<TafsirItem, "ayah_url" | "text">
 const SurahText = () => {
     const { theme } = useContext<Theme>(ThemeContext)
     const [fontSize, setFontSize] = useState(() => +localStorage.getItem("font_size") || 18)
-    let { id: surahName } = useParams()
-    const getSurah = async () => {
-        try {
-            const data: AxiosResponse<Surah[]> = await axios.get(`https://alquran.vip/APIs/ayah?number=${surahName}`);
-            return data?.data
-        } catch (err) {
-            throw new Error(err as any)
-        }
-    };
-    const allAyahs = quran.map((e) => e.ayahs).reduce((a, e) => a.concat(e))
-    const [scrollSpeed] = useState<() => null | string>((): null | string => localStorage.getItem("scrolling_speed"))
+    let { id: surahName } = useParams<number>()
+    const [scrollSpeed,] = useState<() => null | string>((): null | string => +localStorage.getItem("scrolling_speed"))
     const [getAyah] = useSearchParams({})
     const ref = useRef<HTMLElement | null>(null)
     const [currentAyah, setCurrentAyah] = useState<number | null>(getAyah.get("ayah") ? +getAyah.get("ayah")! : null)
@@ -53,8 +47,14 @@ const SurahText = () => {
             return ltr.replace(ltr, arabicItem!?.arabic)
         }).join(""))[0];
     }, []);
+    const tafsirSurah = useMemo<string[]>(() => tafsirat.reduce((el, acc) => el.concat(acc), []).map((el: TafserItem) => [el?.ayah_url?.slice(1), el?.text]).filter((el: string[]) => el[0]?.split("/")[1] === surahName), [surahName]).sort((el, el2) => +el[0].split('/')[2] - +el2[0].split('/')[2])
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [searchedAyah, setSearchedAyah] = useState<string>("");
+    const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
+    const [isTafsirOpen, setIsTafsirOpen] = useState<boolean>(false);
+    const suraah = useMemo<S>(() => quran[surahName - 1], [surahName])
+    console.log(scrollSpeed);
 
-    const suraah = useMemo<S>(() => quran[+surahName - 1], [surahName])
     useEffect(() => {
         let myInterval: NodeJS.Timeout;
         if (isAutoScrolling) {
@@ -83,12 +83,8 @@ const SurahText = () => {
         }
         return () => clearInterval(myInterval)
     }, [bodyHeight, isAutoScrolling,]);
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [searchedAyah, setSearchedAyah] = useState<string>("");
-    const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
     useEffect(() => {
         window.scroll({ top: 0, behavior: "instant" })
-        // setCurrentAyah("")
     }, [suraah])
     useEffect(() => {
         localStorage.setItem("font_size", `${fontSize}`)
@@ -105,12 +101,18 @@ const SurahText = () => {
             setCurrentAyah(+ayahNum);
         }, 1000);
     }, [])
+    const [tafsirAyahNumber, tafsirAyahContent] = [tafsirSurah.map((el) => el[0].split('/')[2]), tafsirSurah.map((el) => el[1])]
     // const { filterdData } = useFilterAyah({ isInSurah: true, searchedAyah, surahNumber: +surahName })
     return (
         <>
+            <AnimatePresence>
+                {isTafsirOpen &&
+                    <TafsirPopup setIsTafsirOpen={setIsTafsirOpen} tafsirSurahAyahs={tafsirAyahNumber} tafsirSurah={tafsirAyahContent} />
+                }
+            </AnimatePresence>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <div onClick={() => setShowSettings(!showSettings)} className={`fixed transition-all duration-700 ${!showSettings ? "bottom-[20px]" : "bottom-[100px]"} right-4 bg-white p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer z-[999]`}>
-                    <img src={settings} className="size-[20px] " alt="" />
+                <div onClick={() => setShowSettings(!showSettings)} className={`fixed transition-all duration-700 ${!showSettings ? "bottom-[20px]" : "bottom-[100px]"} right-4 bg-white p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer z-[9999999999]`}>
+                    <img src={settings} className="size-[20px]" alt="" />
                 </div>
                 <DialogTrigger>
                     <div className={`fixed size-[45px] transition-all duration-700 ${showSettings ? "bottom-[30px]" : "bottom-[80px]"} right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer flex items-center justify-center `}>
@@ -126,20 +128,14 @@ const SurahText = () => {
             </Dialog>
             <AnimatePresence>
                 {searchedAyah &&
-                    <motion.section
-                        className="bg-background fixed left-0 w-full h-screen z-10 p-4 overflow-scroll"
-                        initial={{ top: "100%" }}
-                        animate={{ top: "0%" }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        exit={{ top: "100%" }}
-                    >
+                    <FilterPopupWrapper>
                         <div className="mb-4 flex items-center justify-between">
                             <div>
                                 {filterdAyah?.length ?
                                     ` 
                                     تم العثور علي
-                                    ${replaceNumsEnglishToArabic(filterdAyah?.length + "")}  
-                                    نتائج
+                                    ${replaceNumsEnglishToArabic(filterdAyah?.length + "")}
+                                    نتائج ( ${searchedAyah} )
                                 `
                                     : "لم يتم العثور علي نتائج"}
                             </div>
@@ -148,18 +144,18 @@ const SurahText = () => {
                         <Separator />
                         <section className="flex flex-col gap-2 pt-5">
                             {filterdAyah?.map(a => (
-                                <div onClick={() => handelSelectAyah(a.numberInSurah + "")} className="flex gap-2 text-foreground cursor-pointer" key={a.text}>
+                                <div onClick={() => handelSelectAyah(a.numberInSurah + "")} className="flex gap-2 text-foreground cursor-pointer" key={a.text + Math.random() + "abcde"}>
                                     <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-2 border-green-400 inline-flex items-center justify-center !text-[14px]">{replaceNumsEnglishToArabic(a?.numberInSurah?.toString())}</span>
                                     {a.text}
                                 </div>
                             ))}
                         </section>
-                    </motion.section>
+                    </FilterPopupWrapper>
                 }
             </AnimatePresence>
             <div className="fixed w-[4px] bg-background left-1 pt-3 top-[70px] " style={{ height: `${barHeight}vh` }} />
             <AnimatePresence>
-                {showSettings &&
+                {showSettings && !isTafsirOpen &&
                     <>
                         <motion.div
                             initial={{ marginBottom: -100 }}
@@ -178,10 +174,15 @@ const SurahText = () => {
                                 </div>
                                 <div>
                                     <Button asChild>
-                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! - 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة السابقة</Link>
+                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! - 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة السابقة</Link>
                                     </Button>
+                                    {tafsirSurah.length &&
+                                        <Button onClick={() => { setIsTafsirOpen(prev => !prev); setShowSettings(false) }} className="max-sm:text-sm px-[15px] py-2 mx-2 text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 ">
+                                            اظهر التفسير
+                                        </Button>
+                                    }
                                     <Button asChild>
-                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! + 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة التالية</Link>
+                                        <Link to={`/quran/by-surahs/${+surahName! < 114 ? `${+surahName! + 1}` : ""}`} className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"> السورة التالية</Link>
                                     </Button>
                                 </div>
                             </div>
@@ -202,21 +203,24 @@ const SurahText = () => {
                     })?.map((ayah, idx) => {
                         return (
                             <>
+                                {/* {tafsirSurah[idx] ? (tafsirSurah[idx][1]) : ""} */}
                                 <div data-juz={ayah.juz} onClick={() => {
                                     setCurrentAyah(+ayah.numberInSurah)
                                     localStorage.setItem("last_ayah", JSON.stringify({ surahName, ayahNumber: idx + 1 }))
-                                }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2.5] text-lg inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
-                                    {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.text}
-                                    <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
+                                }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2.5] text-lg w-full inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
+                                    {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.sajda ? ayah.text.slice(0, ayah.text.length - 1) : ayah.text}
+                                    {ayah.sajda && <img src={Sajda} className="size-[35px] grayscale-[100%] " alt="" />}
+                                    <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
                                 </div>
                                 {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz &&
                                     <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
                                 }
                                 {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
-                                    // <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((suraah.ayahs[idx]?.page)))} theme={theme} />
-                                    <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
-                                        <div className={`flex items-center justify-center size-[30px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
-                                    </div>
+                                    <>
+                                        <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
+                                            <div className={`flex items-center justify-center size-[30px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
+                                        </div>
+                                    </>
                                 }
                             </>
                         )
@@ -249,4 +253,4 @@ export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string,
         <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid z-[10] border-black my-2 text-black mt-1`}> الجزء {juzNum}</div>
     )
 }
-export default SurahText
+export default memo(SurahText)
