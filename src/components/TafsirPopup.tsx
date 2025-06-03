@@ -21,8 +21,8 @@ const TafsirPopup = ({ setIsTafsirOpen, tafsirSurah, tafsirSurahAyahs }: Props) 
             <Separator />
             <section className="mt-5">
                 {tafsirSurah.map((el, i) => (
-                    <div className="mb-4" key={useId()}>
-                        <span className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(tafsirSurahAyahs[i])}</span>
+                    <div className="mb-4 text-orange-100" key={useId()}>
+                        <span className="size-[30px] rounded-[50%] p-2 text-orange-700 outline-2 outline-orange-400 mx-2 m-1 bg-white border-solid border-2 border-orange-200 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(tafsirSurahAyahs[i])}</span>
                         {el} </div>
                 ))}
             </section>
