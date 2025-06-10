@@ -15,6 +15,8 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import FilterPopupWrapper from "./FilterPopupWrapper";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import InstallButton from "./InstallWebsite";
+import HoriznotelStyle from "./HoriznotelStyle";
 const SurahByName = () => {
     const [filter, setFilter] = useState<S[] | null>()
     const [isSearched, setIsSearched] = useState<boolean>(false)
@@ -29,11 +31,8 @@ const SurahByName = () => {
     useEffect(() => {
         setFilter(quran?.filter((el) => removeTashkil(el?.name)?.includes(value)), value);
     }, [value])
-    console.log(quran.filter((e) => e.ayahs.length >= 199)
-        .map((e) => e.ayahs.length)
-    );
 
-    
+
     return (
         <section>
             <AnimatePresence>
@@ -66,7 +65,7 @@ const SurahByName = () => {
                                 </CollapsibleTrigger>
                                 <CollapsibleContent>
                                     {a.data?.map(e => (
-                                        <div className="flex gap-1 pr-7 my-5 relative after:absolute after:h-1 after:w-[20px] after:bg-green-400 after:right-[8px] after:top-2.5 z-10 after:z-[-1]">
+                                        <div className="flex gap-1 pr-7 my-5 relative after:absolute after:h-1 after:w-[20px] after:bg-green-400 after:right-[8px] after:top-2.5 z-[666666] after:z-[-1]">
                                             <span className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-2 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background">{replaceNumsEnglishToArabic(e?.numberInSurah?.toString())}</span>
                                             <p className="text-[16px] "> {e?.text} </p>
                                         </div>
@@ -79,7 +78,7 @@ const SurahByName = () => {
             </AnimatePresence>
             <Dialog open={isOpen} >
                 <DialogTrigger onClick={() => setIsOpen(!isOpen)}>
-                    <div className={`fixed size-[45px] transition-all duration-700 bottom-[20px] right-4 text-primary p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer flex bg-background items-center justify-center `}>
+                    <div className={`fixed size-[45px] transition-all duration-700 bottom-[20px] right-4 text-primary p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer flex bg-background items-center justify-center  z-[99999999999999]`}>
                         <Search />
                     </div>
                 </DialogTrigger>

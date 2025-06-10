@@ -16,12 +16,15 @@ import { Separator } from "./ui/separator";
 import Sajda from "@/assets/images/bismillah.png"
 import FilterPopupWrapper from "./FilterPopupWrapper";
 import TafsirPopup from "./TafsirPopup";
+import { getPerPage } from "@/utils/getQuranPerPage";
+import HoriznotelStyle from "./HoriznotelStyle";
+import AyahtsSounds from "./AyahtsSounds";
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">
 const SurahText = () => {
     const { theme } = useContext<Theme>(ThemeContext)
     const [fontSize, setFontSize] = useState(() => +localStorage.getItem("font_size") || 18)
     let { id: surahName } = useParams<number>()
-    const [scrollSpeed,] = useState<() => null | string>((): null | string => +localStorage.getItem("scrolling_speed"))
+    const [scrollSpeed,] = useState<() => undefined | number>((): number => +localStorage.getItem("scrolling_speed") / 10)
     const [getAyah] = useSearchParams({})
     const ref = useRef<HTMLElement | null>(null)
     const [currentAyah, setCurrentAyah] = useState<number | null>(getAyah.get("ayah") ? +getAyah.get("ayah")! : null)
@@ -53,8 +56,6 @@ const SurahText = () => {
     const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(undefined);
     const [isTafsirOpen, setIsTafsirOpen] = useState<boolean>(false);
     const suraah = useMemo<S>(() => quran[surahName - 1], [surahName])
-    console.log(scrollSpeed);
-
     useEffect(() => {
         let myInterval: NodeJS.Timeout;
         if (isAutoScrolling) {
@@ -102,9 +103,10 @@ const SurahText = () => {
         }, 1000);
     }, [])
     const [tafsirAyahNumber, tafsirAyahContent] = [tafsirSurah.map((el) => el[0].split('/')[2]), tafsirSurah.map((el) => el[1])]
-    // const { filterdData } = useFilterAyah({ isInSurah: true, searchedAyah, surahNumber: +surahName })
+    const [isSoundsMode, setIsSoundsMode] = useSearchParams({})
     return (
         <>
+            {/* <AyahtsSounds /> */}
             <AnimatePresence>
                 {isTafsirOpen &&
                     <TafsirPopup setIsTafsirOpen={setIsTafsirOpen} tafsirSurahAyahs={tafsirAyahNumber} tafsirSurah={tafsirAyahContent} />
@@ -193,44 +195,57 @@ const SurahText = () => {
             </AnimatePresence>
             <div
                 style={{ backgroundColor: theme === "Dark" ? "#000" : "#eee" }}
-                className="text-center z-[20] transition-all duration-700 py-2 pt-3 text-lg border-solid border-2 border-green-300 bg-white w-[90%] rounded-xl mx-auto mb-2 sticky top-[60px]"> {suraah!?.name}</div>
+                className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg border-solid border-2 border-green-300 bg-white w-[90%] rounded-xl mx-auto mb-2 sticky top-[60px]"> {suraah!?.name}</div>
             <section ref={ref} className="mb-2 pb-[70px] px-[22px] text-center">
                 <JuzItem font={fontSize} theme={theme} juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")} />
                 {
                     suraah?.ayahs?.map(e => {
                         e.number = +(e.number + "")
                         return e
-                    })?.map((ayah, idx) => {
+                    })?.map((ayah, idx, a) => {
                         return (
                             <>
-                                {/* {tafsirSurah[idx] ? (tafsirSurah[idx][1]) : ""} */}
-                                <div data-juz={ayah.juz} onClick={() => {
-                                    setCurrentAyah(+ayah.numberInSurah)
-                                    localStorage.setItem("last_ayah", JSON.stringify({ surahName, ayahNumber: idx + 1 }))
-                                }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2.5] text-lg w-full inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
-                                    {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.sajda ? ayah.text.slice(0, ayah.text.length - 1) : ayah.text}
-                                    {ayah.sajda && <img src={Sajda} className="size-[35px] grayscale-[100%] " alt="" />}
-                                    <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
-                                </div>
-                                {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz &&
-                                    <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
-                                }
-                                {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
-                                    <>
-                                        <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
-                                            <div className={`flex items-center justify-center size-[30px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
-                                        </div>
-                                    </>
-                                }
+                                <>
+                                    <div data-juz={ayah.juz} onClick={() => {
+                                        setCurrentAyah(+ayah.numberInSurah)
+                                        localStorage.setItem("last_ayah", JSON.stringify({ surahName, ayahNumber: idx + 1 }))
+                                    }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2] text-lg w-full inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
+                                        {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.sajda ? ayah.text.slice(0, ayah.text.length - 1) : ayah.text}
+                                        {ayah.sajda && <img src={Sajda} className="size-[35px] grayscale-[100%] " alt="" />}
+                                        <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
+                                    </div>
+                                    {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz &&
+                                        <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
+                                    }
+                                    {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
+                                        <>
+                                            <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
+                                                <div className={`flex items-center justify-center size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
+                                            </div>
+                                        </>
+                                    }
+                                </>
                             </>
                         )
                     })
                 }
+
+
+
+
                 {surahName === "114" && <EndDuaa font={fontSize} />}
-            </section>
+            </section >
         </>
+
+
     )
 }
+export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string, theme?: themeType }) {
+    return (
+        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-2 text-black mt-1`}> الجزء {juzNum}</div>
+    )
+}
+
 export function EndDuaa({ font, title }: { title?: string, font: number, }) {
     return (
         <>
@@ -248,9 +263,6 @@ export function EndDuaa({ font, title }: { title?: string, font: number, }) {
         </>
     )
 }
-export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string, theme?: themeType }) {
-    return (
-        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid z-[10] border-black my-2 text-black mt-1`}> الجزء {juzNum}</div>
-    )
-}
+
+
 export default memo(SurahText)

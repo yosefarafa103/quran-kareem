@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-
+interface BeforeInstallPromptEvent extends Event {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+}
 function InstallButton() {
-    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -18,10 +21,13 @@ function InstallButton() {
     const handleInstallClick = async () => {
         if (!deferredPrompt) return;
 
-        deferredPrompt.prompt();
+        // Show the install prompt
+        await deferredPrompt.prompt();
 
-        const result = await deferredPrompt.userChoice;
+        // Wait for the user's response
+        await deferredPrompt.userChoice;
 
+        // Reset the prompt state so it can't be used again
         setDeferredPrompt(null);
         setVisible(false);
     };

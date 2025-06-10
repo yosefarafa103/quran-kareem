@@ -31,7 +31,7 @@ export default defineConfig({
         ],
       },
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "robots.txt"],
+      includeAssets: ["mosque-512.png", "robots.txt"],
       manifest: {
         name: "Quran",
         short_name: "Quran & Azkar",

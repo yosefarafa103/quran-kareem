@@ -37,13 +37,12 @@ const FormSearchAyahs = ({ setOpen, isOpen, setSearchedAyah, }: { setSearchedAya
 
         } catch (error) {
             console.error("Form submission error", error);
-            // "Failed to submit the form. Please try again."
         }
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10 w-full">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10 w-full ">
                 <FormField
                     control={form.control}
                     name="searchValue"

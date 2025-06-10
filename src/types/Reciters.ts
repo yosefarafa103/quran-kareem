@@ -1,6 +1,6 @@
 export interface Reciter {
-  reciter_id: string;
-  reciter_name: string;
+  reciter_id: number
+  reciter_name: string 
 }
 export interface ReciterResponse {
   reciters: Reciter[];

@@ -22,7 +22,7 @@ import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
 import { AnimatePresence, motion } from "framer-motion";
 function Header() {
-    
+
     const { isOnline } = useIsOnline()
     const { setTheme, theme } = useContext(ThemeContext) as Theme
     const [mode, setMode] = useState<themeType>((): themeType => localStorage.getItem("theme") as themeType || theme)
@@ -54,7 +54,13 @@ function Header() {
                         </Link>
                         <div className="flex items-center gap-3 ">
                             {LINKS?.map(lnk => (
-                                <NavLink to={`${lnk.route}`} className={`[&.active]:${theme === "Dark" ? "border-b-white" : "border-b-black"} max-sm:hidden pb-1 border-solid border-b-4 border-transparent`}>{lnk.name}</NavLink>
+                                <NavLink
+                                    key={lnk.route}
+                                    to={`${lnk.route}`}
+                                    className={`[&.active]:${theme === "Dark" ? "border-b-white" : "border-b-black"} max-sm:hidden pb-1 border-solid border-b-4 border-transparent`}
+                                >
+                                    {lnk.name}
+                                </NavLink>
                             ))}
                             <span onClick={handelUpdateTheme} className="size-[35px] max-sm:hidden rounded-lg bg-white flex items-center cursor-pointer hover:bg-[#eee]">
                                 {!isDark ? <>
@@ -65,7 +71,6 @@ function Header() {
                             </span>
                         </div>
                         <div className="sm:hidden flex cursor-pointer items-center gap-3">
-                            {/* <ConnectedInternet isConnected={isOnline} /> */}
                             {isOnline ?
                                 <Wifi className="text-green-400" />
                                 :
@@ -86,7 +91,7 @@ function Header() {
                     </section>
                     <DropdownMenuContent side="bottom" sideOffset={20} className="w-full max-w-[600px] relative z-[999]">
                         {LINKS?.map(lnk => (
-                            <DropdownMenuItem onClick={() => n(lnk.route)}>
+                            <DropdownMenuItem key={lnk.route} onClick={() => n(lnk.route)}>
                                 {lnk.name}
                                 {/* <NavLink to={`${lnk.route}`} className={`border-b-[#ddd] w-full pb-4 pr-5 border-solid border-b-[1px]`}></NavLink> */}
                             </DropdownMenuItem>

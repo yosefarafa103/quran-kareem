@@ -42,7 +42,7 @@ const Settings = () => {
                         })}
                     </SelectContent>
                 </Select>
-                <Label className="mb-3 mt-6"> سرعة الانزلاق التلقائي </Label>
+                <Label className="mb-3 mt-6"> سرعة الانزلاق التلقائي  <span> 1 الي 10.. 1 تعني نزول سريع  </span> </Label>
                 <section className="flex items-center gap-1 sm:gap-4 justify-between">
                     <Select dir="rtl" onValueChange={(e) => { localStorage.setItem("scrolling_speed", e); location.reload() }} defaultValue={localStorage.getItem("scrolling_speed")! || "3"}>
                         <SelectTrigger>
