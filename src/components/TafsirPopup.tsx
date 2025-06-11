@@ -28,16 +28,20 @@ const TafsirPopup = ({ setIsTafsirOpen, tafsirSurah, tafsirSurahAyahs }: Props) 
             <section className="mt-5">
 
                 {filterTafsirAyah > 0 && filterTafsirAyah < tafsirSurahAyahs.length ? <>
-                    <div className="mb-4 text-orange-100" >
+                    <div className="mb-4 text-orange-400" >
                         <span className="size-[30px] rounded-[50%] p-2 text-orange-700 outline-2 outline-orange-400 mx-2 m-1 bg-white border-solid border-2 border-orange-200 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(tafsirSurahAyahs[filterTafsirAyah - 1])}</span>
                         {tafsirSurah[filterTafsirAyah - 1]}
                     </div>
                 </> : +filterTafsirAyah > tafsirSurahAyahs.length ? <h2> اكتب رقم الايه الصحيح </h2> :
 
                     tafsirSurah.map((el, i) => (
-                        <div className="mb-4 text-orange-100" key={el + i * 10000}>
-                            <span className="size-[35px] rounded-[50%] p-2 text-orange-700 outline-2 outline-orange-400 mx-2 m-1 bg-white border-solid border-2 border-orange-200 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(tafsirSurahAyahs[i])}</span>
-                            {el} </div>
+                        <>
+                            <div className="mb-4 dark:text-orange-300 mt-4" key={el + i * 10000}>
+                                <span className="size-[35px] rounded-[50%] p-2 text-orange-700 outline-2 outline-orange-400 mx-2 m-1 bg-white border-solid border-2 border-orange-200 inline-flex items-center justify-center text-[18px]">{replaceNumsEnglishToArabic(tafsirSurahAyahs[i])}</span>
+                                {el} </div>
+                            <Separator />
+
+                        </>
                     ))
                 }
 

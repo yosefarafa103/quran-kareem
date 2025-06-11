@@ -45,7 +45,7 @@ export function ZekrItem({ count, text, handlingClickFN, }: Z) {
                     }
                 }}
 
-                className={`relative block px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg my-2 ${count - clicks <= 0 && "hidden"} mb-[65px] select-none w-full`}
+                className={`relative block px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-green-400 p-4 rounded-lg my-4 ${count - clicks <= 0 && "hidden"} mb-[65px] select-none w-full`}
                 style={{ fontSize: localStorage.getItem("font_size") + "px", }}
             >
                 <div className={`${count - clicks <= 0 ? "opacity-[0.5]" : ""} text-center `}>

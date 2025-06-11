@@ -71,7 +71,6 @@ const SurahText = () => {
                     behavior: "smooth"
                 })
             }, +scrollSpeed! < 1 ? +scrollSpeed! * 1000 : +scrollSpeed! / 1000);
-
         }
         if (ref.current) {
             setBodyHeight(ref.current.clientHeight)
@@ -94,7 +93,6 @@ const SurahText = () => {
         setFilterdAyah(suraah.ayahs.filter((a) => a.text.replace(/[\u064B-\u0652]/g, '').includes(searchedAyah)
         ))
     }, [searchedAyah])
-    // console.log(searchedAyah, searchedAyah.replaceAll(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g, ""));
     const handelSelectAyah = useCallback((ayahNum: string) => {
         setSearchedAyah("")
         setTimeout(() => {
@@ -218,11 +216,13 @@ const SurahText = () => {
                                         <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
                                     }
                                     {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
-                                        <>
-                                            <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10">
-                                                <div className={`flex items-center justify-center size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-black`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
-                                            </div>
-                                        </>
+                                        <div className="py-4">
+                                            <Separator />
+                                            {/* <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10"> */}
+                                            <div className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-secondary-foreground`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
+                                            {/* </div> */}
+                                            <Separator />
+                                        </div>
                                     }
                                 </>
                             </>
@@ -242,7 +242,7 @@ const SurahText = () => {
 }
 export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string, theme?: themeType }) {
     return (
-        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-2 text-black mt-1`}> الجزء {juzNum}</div>
+        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-2 z-[2] text-black mt-1`}> الجزء {juzNum}</div>
     )
 }
 
