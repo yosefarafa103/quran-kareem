@@ -12,7 +12,7 @@ const Settings = () => {
     }, [])
     return (
         <>
-            <section className="p-5">
+            <section className="p-5 ">
 
                 <Label className="mb-3"> نوع الخط </Label>
 

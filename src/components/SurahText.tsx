@@ -19,6 +19,7 @@ import TafsirPopup from "./TafsirPopup";
 import { getPerPage } from "@/utils/getQuranPerPage";
 import HoriznotelStyle from "./HoriznotelStyle";
 import AyahtsSounds from "./AyahtsSounds";
+import { replaceNumsEnglishToArabic } from "@/utils/helpers";
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">
 const SurahText = () => {
     const { theme } = useContext<Theme>(ThemeContext)
@@ -85,7 +86,9 @@ const SurahText = () => {
     }, [bodyHeight, isAutoScrolling,]);
     useEffect(() => {
         window.scroll({ top: 0, behavior: "instant" })
+        setCurrentAyah(null)
     }, [suraah])
+
     useEffect(() => {
         localStorage.setItem("font_size", `${fontSize}`)
     }, [fontSize])
@@ -210,16 +213,16 @@ const SurahText = () => {
                                     }} id={(idx + 1).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2] text-lg w-full inline ${currentAyah === +ayah.numberInSurah ? "text-red-500" : ""}`}>
                                         {+surahName! !== 9 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.sajda ? ayah.text.slice(0, ayah.text.length - 1) : ayah.text}
                                         {ayah.sajda && <img src={Sajda} className="size-[35px] grayscale-[100%] " alt="" />}
-                                        <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
+                                        <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
                                     </div>
                                     {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz &&
-                                        <JuzItem font={fontSize} juzNum={replaceNumsEnglishToArabic(String((ayah?.juz + 1)))} theme={theme} />
+                                        <JuzItem font={fontSize} juzNum={ayah?.juz + 1 + ""} theme={theme} />
                                     }
                                     {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page &&
                                         <div className="py-4">
                                             <Separator />
                                             {/* <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10"> */}
-                                            <div className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-secondary-foreground`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
+                                            <div className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-secondary-foreground isolate z-[1]`}>  {replaceNumsEnglishToArabic(ayah?.page + "")}</div>
                                             {/* </div> */}
                                             <Separator />
                                         </div>
@@ -230,9 +233,6 @@ const SurahText = () => {
                     })
                 }
 
-
-
-
                 {surahName === "114" && <EndDuaa font={fontSize} />}
             </section >
         </>
@@ -242,7 +242,14 @@ const SurahText = () => {
 }
 export function JuzItem({ juzNum, font, theme }: { font: number, juzNum: string, theme?: themeType }) {
     return (
-        <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-2 z-[2] text-black mt-1`}> الجزء {juzNum}</div>
+        <div className="sticky top-[-4px] z-[2] ">
+            <Separator />
+            {/* <div className="flex justify-center items-center p-2 rounded-lg z-10 bg-secondary-foreground my-10"> */}
+            <div className={`mx-auto items-center justify-center my-2 text-secondary-foreground text-xl p-3  transition-all duration-700 bg-background text-center flex gap-1 border-2 border-background rounded-lg`}> الجزء {(juzNum + "")}</div>
+            {/* </div> */}
+            <Separator />
+        </div>
+        // <div className={`block w-full mr-auto p-3 sticky transition-all duration-700 top-[3px] bg-white text-center rounded-lg border-2 border-solid border-black my-2 z-[2] text-black mt-1`}> الجزء {juzNum}</div>
     )
 }
 

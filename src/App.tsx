@@ -29,7 +29,7 @@ const App = () => {
           <Suspense fallback={<><Loader /> برجاء الانتظار ..</>}>
             <Header />
             <main style={{ fontSize: localStorage.getItem("font_size") ? `${+localStorage.getItem("font_size")}px` : "16px", fontFamily: localStorage.getItem("font_type") ? localStorage.getItem("font_type") : "cairo" }} className={`${theme?.theme === "Dark" ? "dark" : "light"} transition-all duration-500`}>
-              <section className="md:w-[calc(100%-150px)] min-h-screen mx-auto sm:px-5  border-x-2 border-x-primary">
+              <section className="md:w-[calc(100%-150px)] min-h-[calc(100svh-70px)] mx-auto sm:px-5  border-x-2 border-x-primary">
                 <Routes>
                   <Route element={<Outlet />}>
                     <Route index element={<Navigate to="/quran" replace />} />
