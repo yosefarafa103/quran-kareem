@@ -1,54 +1,28 @@
-# React + TypeScript + Vite
+# Quran Kareem 📖 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🛠️ Technologies Used
 
-Currently, two official plugins are available:
+- Frontend: React.js, Typescript
+- Styling: Tailwind CSS / Custom CSS
+- API: Quran API for verses
+- Audio: Web Audio API for recitation playback (IN PROGRESS)
+- Storage: Local Storage for bookmarks and preferences 
+- Build Tool: Vite
+- Deployment: Vercel
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+1. Browse Surahs: Navigate through the list of Surahs
+2. Read Verses: Click on any Surah to read its verses
+3. Listen to Recitation: Use the audio controls to listen to recitations
+4. Search: search bar to find specific verses or topics
+5. Bookmark: Click the bookmark icon to save verses
+6. Change Settings: Adjust font size, theme, and translation preferences
+7. OFFLINE MODE
+8. All Surahs In One Page
+9. Prayer times
+# Yosef Arafa
+- GitHub: (https://github.com/yosefarafa103)
+- Email: yosefarafa198@gmail.com 
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Made with ❤️ for the Muslim community
