@@ -6,7 +6,6 @@ import { MoveUp } from 'lucide-react';
 import { Button } from './ui/button';
 
 const AllSurahsInOnePlace = () => {
-    console.log(quran);
     const fontSize = useMemo((): number => +localStorage.getItem("font_size")! || 18, [])
     const replaceNumsEnglishToArabic = useCallback((ayahNum: string) => {
         const numbers = [
@@ -45,9 +44,10 @@ const AllSurahsInOnePlace = () => {
                                 return (
                                     <>
                                         <>
-                                            <div onClick={() => {
+                                            <div onClick={function () {
+                                                console.log(`Surah-${el.number}-${idx + 1}`);
                                                 localStorage.setItem("last_ayah_in_moshaf", `Surah-${el.number}-${idx + 1}`)
-                                            }} id={(`Surah-${el.number}-${idx + 1}`).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2] text-lg w-full inline ${i === +localStorage.getItem('last_ayah_in_moshaf')?.split("-")[1] && ayah.numberInSurah === +localStorage.getItem('last_ayah_in_moshaf')?.split("-")[2] && "text-red-500"} `}>
+                                            }} id={(`Surah-${el.number}-${idx + 1}`).toString()} style={{ fontSize }} className={`font-semibold cursor-pointer leading-[2] text-lg w-full inline ${localStorage.getItem('last_ayah_in_moshaf') === `Surah-${el.number}-${idx + 1}` && "text-red-500"} `}>
                                                 {+idx! !== 8 && idx === 0 && !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ") ? ayah?.text.slice(38) : ayah.sajda ? ayah.text.slice(0, ayah.text.length - 1) : ayah.text}
                                                 <span style={{ fontSize: fontSize }} className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]">   {replaceNumsEnglishToArabic(ayah?.numberInSurah?.toString())}</span>
                                             </div>
