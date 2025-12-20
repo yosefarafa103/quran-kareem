@@ -1,0 +1,30 @@
+import { ThemeContext } from "@/context/ThemeContext";
+import { Theme } from "@/types/theme";
+import { useContext, useState } from "react";
+
+interface Props {
+  children: React.ReactNode;
+}
+const WrapperContent = ({ children }: Props) => {
+  const theme = useContext(ThemeContext) as Theme;
+
+  const [fontSize] = useState(() => localStorage.getItem("font_size"));
+  const [fontType] = useState(() => localStorage.getItem("font_type"));
+  return (
+    <main
+      style={{
+        fontSize: localStorage.getItem("font_size")
+          ? `${Number(fontSize)}px`
+          : "16px",
+        fontFamily: fontType ? fontType : "cairo",
+      }}
+      className={`${
+        theme?.theme === "Dark" ? "dark" : "light"
+      } transition-all duration-500`}
+    >
+      {children}
+    </main>
+  );
+};
+
+export default WrapperContent;
