@@ -59,8 +59,15 @@
   font-family: tajawal;
   src: url(./assets/fonts/Tajawal-Medium.ttf);
 }
+
+@font-face {
+  font-family: "ar";
+  src: url(../public/fonts/Arbold.ttf);
+}
+
 body {
   direction: rtl;
+  font-family: ar !important;
 }
 html {
   scroll-behavior: smooth;

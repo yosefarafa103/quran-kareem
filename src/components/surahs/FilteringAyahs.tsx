@@ -40,7 +40,7 @@ const FilteringAyahs = ({
   return (
     <FilterPopupWrapper>
       <div className="mb-4 flex items-center justify-between">
-        <div className="sticky z-[99] top-0 right-0">
+        <div className="sticky z-9999999999 top-0 right-0">
           {filterdAyah?.length
             ? ` 
                 تم العثور علي

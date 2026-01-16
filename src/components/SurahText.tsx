@@ -123,7 +123,7 @@ const SurahText = () => {
     tafsirSurah.map((el) => el[1]),
   ];
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<Loader isFullScreen />}>
       <SwappingSettings
         surahName={+surahName!}
         fontSize={fontSize}
@@ -232,7 +232,7 @@ const SurahText = () => {
       <div className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]">
         {suraah!?.name}
       </div>
-      <section ref={ref} className="mb-2 pb-[70px] text-center">
+      <section ref={ref} className="mb-2 pb-[70px] text-center p-2">
         <JuzItem
           font={fontSize}
           juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")}

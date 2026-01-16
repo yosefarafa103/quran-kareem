@@ -7,9 +7,6 @@ import SearchInSurahsContext, {
 import { S } from "@/constants/quran";
 import { quran } from "@/constants/quran";
 import { useFilterAyah } from "@/hooks/useFilterAyah";
-import { Search } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
-import FormSearchAyahs from "./FormSearchAyahs";
 import { removeTashkil, replaceNumsEnglishToArabic } from "@/utils/helpers";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./ui/button";
@@ -21,6 +18,7 @@ import {
   CollapsibleTrigger,
 } from "./ui/collapsible";
 import ExtractAyaFromQuran from "./surahs/ExtractAyaFromQuran";
+import QuranNav from "./Quran";
 const SurahByName = () => {
   const [filter, setFilter] = useState<S[] | null>(null);
   const [isSearched, setIsSearched] = useState<boolean>(false);
@@ -45,7 +43,7 @@ const SurahByName = () => {
       <AnimatePresence>
         {isSearched && (
           <FilterPopupWrapper>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between relative z-9999999999 isolate">
               <div>
                 {isSearched
                   ? ` 
@@ -106,6 +104,7 @@ const SurahByName = () => {
       <h2 className="font-bold text-xl border-solid border-2 border-transparent border-b-[#eee] pb-5 pr-3">
         سور القران
       </h2>
+      <QuranNav />
       <SearchBox setFilter={setValue} />
       <section className="grid md:grid-cols-4  max-md:grid-cols-2 max-sm:grid-cols-1 gap-">
         {!filter?.length && value.length > 0
@@ -121,13 +120,13 @@ const SurahByName = () => {
                 <section className="px-3 mt-3">
                   <div className="flex items-center justify-between">
                     <div>عدد اياتها</div>
-                    <span className="size-[30px] rounded-md p-3  text-white bg-green-400 flex items-center justify-center text-sm">
+                    <span className="size-[30px] rounded-md p-3  text-white bg-green-700 flex items-center justify-center text-sm">
                       {` ${item.ayahs.length}`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>نوعها</div>
-                    <div className="rounded-md px-3 py-1.5 text-white bg-green-400 flex items-center justify-center text-sm mt-3">
+                    <div className="rounded-md px-3 py-1.5 text-white bg-green-700 flex items-center justify-center text-sm mt-3">
                       {item.type === "Meccan" ? `  مكية  ` : `  مدنية `}
                     </div>
                   </div>

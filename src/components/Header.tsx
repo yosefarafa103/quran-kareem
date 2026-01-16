@@ -38,13 +38,6 @@ function Header() {
   return (
     <>
       <Dialog>
-        <DialogContent dir="rtl">
-          <DialogHeader>
-            <DialogTitle dir="ltr" className="mb-4 text-xl">
-              الاعدادات
-            </DialogTitle>
-          </DialogHeader>
-        </DialogContent>
         <DropdownMenu dir="rtl">
           <section
             style={{
@@ -52,7 +45,7 @@ function Header() {
                 isDark === true ? `${colors.dark.green}` : colors.light.green,
               color: isDark === false ? colors.dark.text : colors.light.text,
             }}
-            className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300`}
+            className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300 sticky top-0 `}
           >
             <Link to={`/`}>
               <img src={mosque} className="size-[50px]" loading="lazy" alt="" />

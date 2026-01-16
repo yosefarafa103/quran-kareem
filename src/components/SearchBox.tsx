@@ -28,7 +28,7 @@ const SearchBox = ({
           theme === "Dark" ? `${colors.dark.green}` : colors.light.green,
         color: theme === "Light" ? colors.dark.text : colors.light.text,
       }}
-      className={`flex items-center gap-3 sm:m-4 m-2 sticky transition-all duration-500 top-2 rounded-xl p-3`}
+      className={`flex items-center gap-3 sm:m-4 m-2 sticky transition-all duration-500 top-18 rounded-xl p-3`}
     >
       <Input
         onChange={(e) => setValue(e.target.value)}

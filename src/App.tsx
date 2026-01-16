@@ -24,11 +24,12 @@ const SurahByName = lazy(() => import("./components/SurahByName"));
 const Azkar = lazy(() => import("./components/Azkar"));
 const App = () => {
   const queryClient = new QueryClient();
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<Loader isFullScreen />}>
             <Header />
             <WrapperContent>
               <section className="md:w-[calc(100%-150px)] min-h-[calc(100svh-70px)] mx-auto sm:px-5 border-x-2 border-x-green-400">
@@ -59,7 +60,6 @@ const App = () => {
                     <Route path="/prayer-times" element={<MwaketElsalaa />} />
                     <Route path="/azkar" element={<Azkar />} />
                     <Route path="/sebha" element={<Sebha />} />
-                    <Route path="/settings" element={<Settings />} />
                   </Route>
                 </Routes>
               </section>

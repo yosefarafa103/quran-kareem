@@ -21,11 +21,11 @@ const Settings = () => {
                         <SelectValue placeholder="" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="cairo"> خط كايرو</SelectItem>
-                        <SelectItem value="tajawal "> خط تجوال</SelectItem>
-                        <SelectItem value="amiri"> خط أميري</SelectItem>
-                        <SelectItem value="almarai "> خط المراعي</SelectItem>
-                        <SelectItem value="othmany "> خط العثماني</SelectItem>
+                        <SelectItem value="cairo"> خط 1</SelectItem>
+                        <SelectItem value="tajawal "> خط 2</SelectItem>
+                        <SelectItem value="amiri"> خط 3</SelectItem>
+                        <SelectItem value="almarai "> خط 4</SelectItem>
+                        <SelectItem value="othmany "> خط 5</SelectItem>
                     </SelectContent>
                 </Select>
                 <Select dir="rtl" onValueChange={(e) => { localStorage.setItem("font_size", e); location.reload() }} defaultValue={localStorage.getItem("font_size")! || "cairo"}>
