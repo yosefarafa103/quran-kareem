@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import FilterPopupWrapper from "../FilterPopupWrapper";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { arabicNumber as numbers } from "@/constants/variables";
+import { arabicNumber as numbers, themes } from "@/constants/variables";
 import { Surah } from "@/types/quranSurahs";
 type FilteringAyahsProps = {
   filterdAyah: Surah[] | undefined;
@@ -37,6 +37,7 @@ const FilteringAyahs = ({
       setCurrentAyah(+ayahNum);
     }, 1000);
   }, []);
+
   return (
     <FilterPopupWrapper>
       <div className="mb-4 flex items-center justify-between">

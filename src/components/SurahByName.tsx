@@ -19,11 +19,17 @@ import {
 } from "./ui/collapsible";
 import ExtractAyaFromQuran from "./surahs/ExtractAyaFromQuran";
 import QuranNav from "./Quran";
+import { cn } from "@/lib/utils";
+import { themes } from "@/constants/variables";
+import { ThemeContext } from "@/context/ThemeContext";
 const SurahByName = () => {
   const [filter, setFilter] = useState<S[] | null>(null);
   const [isSearched, setIsSearched] = useState<boolean>(false);
   const { setValue, value } = useContext(SearchContext);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [currentTheme, setCurrentTheme] = useState<
+  //   Partial<(typeof themes)[number]> | undefined
+  // >();
   const [searchedAyah, setSearchedAyah] = useState<string>("");
   const { filterdData } = useFilterAyah({
     isInSurah: false,
@@ -37,7 +43,12 @@ const SurahByName = () => {
   useEffect(() => {
     setFilter(quran.filter((el) => removeTashkil(el.name!)?.includes(value)));
   }, [value]);
+  const theme = useContext(ThemeContext);
 
+  const themeStyleProps = {
+    borderColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.secondaryColor,
+    backgroundColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.primaryColor,
+  };
   return (
     <section>
       <AnimatePresence>
@@ -47,12 +58,12 @@ const SurahByName = () => {
               <div>
                 {isSearched
                   ? ` 
-                                                تم العثور علي
-                                                ${replaceNumsEnglishToArabic(
-                                                  filterdData?.length + ""
-                                                )}  
-                                                نتائج
-                                            `
+                          تم العثور علي
+                          ${replaceNumsEnglishToArabic(
+                            filterdData?.length + ""
+                          )}  
+                          نتائج
+                      `
                   : "لم يتم العثور علي نتائج"}
               </div>
               <Button
@@ -73,7 +84,10 @@ const SurahByName = () => {
                     className="flex gap-2 text-foreground cursor-pointer"
                     key={a.name}
                   >
-                    <span className="size-[10px] rounded-[50%] p-2 bg-green-600 border-solid border-2 border-green-400 inline-flex items-center justify-center !text-[14px]">
+                    <span
+                      style={themeStyleProps}
+                      className="size-[10px] rounded-[50%] p-2 bg-green-600 border-solid border-1 border-green-400 inline-flex items-center justify-center !text-[14px]"
+                    >
                       {replaceNumsEnglishToArabic(a?.numberInSurah?.toString())}
                     </span>
                     {a.name}
@@ -82,7 +96,15 @@ const SurahByName = () => {
                 <CollapsibleContent>
                   {a.data?.map((e) => (
                     <div className="flex gap-1 pr-7 my-5 relative after:absolute after:h-1 after:w-[20px] after:bg-green-400 after:right-[8px] after:top-2.5 z-[666666] after:z-[-1]">
-                      <span className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-2 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background">
+                      <span
+                        style={{
+                          ...themeStyleProps,
+                          color:
+                            themes[+theme?.theme!.split("-")?.[1] - 1]
+                              ?.secondaryColor,
+                        }}
+                        className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-1 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background"
+                      >
                         {replaceNumsEnglishToArabic(
                           e?.numberInSurah?.toString()
                         )}
@@ -106,33 +128,47 @@ const SurahByName = () => {
       </h2>
       <QuranNav />
       <SearchBox setFilter={setValue} />
-      <section className="grid md:grid-cols-4  max-md:grid-cols-2 max-sm:grid-cols-1 gap-">
-        {!filter?.length && value.length > 0
-          ? "لم يتم العثور علي نتائج"
-          : filter!?.map((item) => (
-              <Link
-                to={`${item?.number}`}
-                className="pb-4 mt-3 rounded-lg cursor-pointer flex-col gap-2 justify-center border-solid border-[2px] mx-3 border-green-400"
+      <section className="grid md:grid-cols-4 max-md:grid-cols-2 max-sm:grid-cols-1 gap-">
+        {!filter?.length && value.length > 0 ? (
+          <div className="px-5">لم يتم العثور علي نتائج</div>
+        ) : (
+          filter!?.map((item) => (
+            <Link
+              to={`${item?.number}`}
+              style={{
+                borderColor:
+                  themes[+theme?.theme!?.split("-")?.[1] - 1]?.border,
+              }}
+              className={cn(
+                "pb-4 mt-3 rounded-lg cursor-pointer flex-col gap-2 justify-center border-solid border-2 mx-3"
+              )}
+            >
+              <section
+                style={{
+                  borderBottomColor:
+                    themes[+theme?.theme!?.split("-")?.[1] - 1]?.border,
+                }}
+                className="px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-transparent border-b-green-400 pt-2 pb-3"
               >
-                <section className="px-3 font-bold text-md max-sm:text-sm border-solid border-2 border-transparent border-b-green-400 pt-2 pb-3">
-                  {item?.name}
-                </section>
-                <section className="px-3 mt-3">
-                  <div className="flex items-center justify-between">
-                    <div>عدد اياتها</div>
-                    <span className="size-[30px] rounded-md p-3  text-white bg-green-700 flex items-center justify-center text-sm">
-                      {` ${item.ayahs.length}`}
-                    </span>
+                {item?.name}
+              </section>
+              <section className="px-3 mt-3">
+                <div className="flex items-center justify-between">
+                  <div>عدد اياتها</div>
+                  <span className="size-[30px] rounded-md px-5 text-white bg-green-700 flex items-center justify-center text-sm background">
+                    {` ${item.ayahs.length}`}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>نوعها</div>
+                  <div className="rounded-md px-3 py-1.5 text-white bg-green-700 flex items-center justify-center text-sm mt-3 background">
+                    {item.type === "Meccan" ? `  مكية  ` : `  مدنية `}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div>نوعها</div>
-                    <div className="rounded-md px-3 py-1.5 text-white bg-green-700 flex items-center justify-center text-sm mt-3">
-                      {item.type === "Meccan" ? `  مكية  ` : `  مدنية `}
-                    </div>
-                  </div>
-                </section>
-              </Link>
-            ))}
+                </div>
+              </section>
+            </Link>
+          ))
+        )}
       </section>
     </section>
   );

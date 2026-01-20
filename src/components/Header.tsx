@@ -1,24 +1,22 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
-import sun from "../assets/sun.svg";
-import moon from "../assets/moon.svg";
 import mosque from "../assets/images/mosque.png";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { colors } from "../constants/colors";
 import { ThemeContext } from "@/context/ThemeContext";
 import { Theme, themeType } from "../types/theme";
-import { Menu, Wifi, WifiOff } from "lucide-react";
-import { LINKS } from "../constants/variables";
+import { Menu, Moon, Palette, Sun, Wifi, WifiOff } from "lucide-react";
+import { LINKS, themes } from "../constants/variables";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Dialog } from "./ui/dialog";
 
 import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
+
 function Header() {
   const { isOnline } = useIsOnline();
   const { setTheme, theme } = useContext(ThemeContext) as Theme;
@@ -34,18 +32,30 @@ function Header() {
     localStorage.setItem("theme", newMode);
   }, [isDark]);
   const n = useNavigate();
-  useEffect(() => localStorage.setItem("theme", theme), [mode, isDark, theme]);
+  useEffect(
+    () => localStorage.setItem("theme", theme || "dark"),
+    [mode, isDark, theme]
+  );
+  console.log();
+
   return (
     <>
       <Dialog>
         <DropdownMenu dir="rtl">
           <section
             style={{
-              backgroundColor:
-                isDark === true ? `${colors.dark.green}` : colors.light.green,
-              color: isDark === false ? colors.dark.text : colors.light.text,
+              backgroundColor: /theme-\d/gi.test(theme!)
+                ? themes[+theme!.split("-")?.[1] - 1]?.secondaryColor
+                : isDark === true
+                ? `${colors.dark.green}`
+                : colors.light.green,
+              color: /theme-\d/gi.test(theme!)
+                ? "#fff"
+                : isDark === false
+                ? colors.dark.text
+                : colors.light.text,
             }}
-            className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300 sticky top-0 `}
+            className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300 sticky top-0`}
           >
             <Link to={`/`}>
               <img src={mosque} className="size-[50px]" loading="lazy" alt="" />
@@ -64,24 +74,14 @@ function Header() {
               ))}
               <span
                 onClick={handelUpdateTheme}
-                className="size-[35px] max-sm:hidden rounded-lg bg-white flex items-center cursor-pointer hover:bg-[#eee]"
+                className="size-[35px] max-sm:hidden rounded-lg flex items-center cursor-pointer"
               >
                 {!isDark ? (
                   <>
-                    <img
-                      src={moon}
-                      className="size-[50%] mx-auto select-none"
-                      loading="lazy"
-                      alt=""
-                    />
+                    <Moon />
                   </>
                 ) : (
-                  <img
-                    src={sun}
-                    className="size-[50%] mx-auto select-none"
-                    loading="lazy"
-                    alt=""
-                  />
+                  <Sun />
                 )}
               </span>
             </div>
@@ -94,15 +94,17 @@ function Header() {
               <InstallButton />
               <span
                 onClick={handelUpdateTheme}
-                className="size-[35px] rounded-lg bg-white !text-white flex items-center cursor-pointer "
+                className="rounded-lg flex items-center cursor-pointer "
               >
-                <img
-                  src={isDark ? sun : moon}
-                  className="size-[50%] mx-auto select-none"
-                  loading="lazy"
-                  alt=""
-                />
+                {!isDark ? (
+                  <>
+                    <Moon />
+                  </>
+                ) : (
+                  <Sun />
+                )}
               </span>
+              <ThemesDropDown />
               <DropdownMenuTrigger>
                 <Menu />
               </DropdownMenuTrigger>
@@ -129,5 +131,35 @@ function Header() {
     </>
   );
 }
-
 export default Header;
+function ThemesDropDown() {
+  const theme = useContext(ThemeContext);
+  return (
+    <DropdownMenu dir="rtl">
+      <DropdownMenuTrigger>
+        <Palette />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center" className="mt-5">
+        {themes.map((el, idx) => (
+          <DropdownMenuItem onClick={() => theme?.setTheme(`theme-${idx}`)}>
+            ثيم {++idx}
+            <div className="flex gap-1 items-center">
+              <span
+                className="size-5 flex rounded-full"
+                style={{
+                  backgroundColor: el.primaryColor,
+                }}
+              />
+              <span
+                className="size-5 flex rounded-full"
+                style={{
+                  backgroundColor: el.secondaryColor,
+                }}
+              />
+            </div>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

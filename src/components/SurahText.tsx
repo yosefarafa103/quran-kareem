@@ -1,10 +1,12 @@
 import { Link, useParams, useSearchParams } from "react-router";
 import { Surah } from "../types/quranSurahs";
 import {
+  CSSProperties,
   lazy,
   memo,
   Suspense,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -22,8 +24,10 @@ import TafsirPopup from "./TafsirPopup";
 const SwappingSettings = lazy(() => import("./SwappingSettings"));
 const FilteringAyahs = lazy(() => import("./surahs/FilteringAyahs"));
 const SearchForAyah = lazy(() => import("./surahs/SearchForAyah"));
-import { arabicNumber as numbers } from "@/constants/variables";
+import { arabicNumber as numbers, themes } from "@/constants/variables";
 import Loader from "./Loader";
+import { ThemeContext } from "@/context/ThemeContext";
+import { Theme } from "@/types/theme";
 
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">;
 const SurahText = () => {
@@ -70,6 +74,8 @@ const SurahText = () => {
   const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(
     undefined
   );
+  const theme = useContext<Theme>(ThemeContext);
+
   const [isTafsirOpen, setIsTafsirOpen] = useState<boolean>(false);
   const suraah = useMemo<S>(() => quran[Number(surahName) - 1], [surahName]);
   useEffect(() => {
@@ -107,9 +113,7 @@ const SurahText = () => {
     setCurrentAyah(null);
   }, [suraah]);
 
-  useEffect(() => {
-    localStorage.setItem("font_size", `${fontSize}`);
-  }, [fontSize]);
+  useEffect(() => localStorage.setItem("font_size", `${fontSize}`), [fontSize]);
   useEffect(() => {
     setFilterdAyah(
       suraah.ayahs.filter((a) =>
@@ -122,6 +126,10 @@ const SurahText = () => {
     tafsirSurah.map((el) => el[0].split("/")[2]),
     tafsirSurah.map((el) => el[1]),
   ];
+  const themeStyleProps = {
+    borderColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.secondaryColor,
+    backgroundColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.primaryColor,
+  };
   return (
     <Suspense fallback={<Loader isFullScreen />}>
       <SwappingSettings
@@ -229,11 +237,15 @@ const SurahText = () => {
           </>
         )}
       </AnimatePresence>
-      <div className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]">
+      <div
+        style={themeStyleProps}
+        className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]"
+      >
         {suraah!?.name}
       </div>
       <section ref={ref} className="mb-2 pb-[70px] text-center p-2">
         <JuzItem
+          style={themeStyleProps}
           font={fontSize}
           juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")}
         />
@@ -275,7 +287,11 @@ const SurahText = () => {
                     />
                   )}
                   <span
-                    style={{ fontSize: fontSize - 7 }}
+                    style={{
+                      fontSize: fontSize - 3,
+                      ...themeStyleProps,
+                      color: themeStyleProps.borderColor,
+                    }}
                     className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]"
                   >
                     {replaceNumsEnglishToArabic(
@@ -284,12 +300,28 @@ const SurahText = () => {
                   </span>
                 </div>
                 {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz && (
-                  <JuzItem font={fontSize} juzNum={ayah?.juz + 1 + ""} />
+                  <JuzItem
+                    style={themeStyleProps}
+                    juzNum={ayah?.juz + 1 + ""}
+                  />
                 )}
                 {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page && (
-                  <div className="my-4 border-y-2 border-y-green-500">
+                  <div
+                    style={{
+                      borderTopColor:
+                        themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                      borderBottomColor:
+                        themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                    }}
+                    className="my-4 border-y-2 border-y-green-500"
+                  >
                     <div
-                      style={{ fontSize: fontSize - 7 }}
+                      style={{
+                        fontSize: fontSize - 3,
+                        borderColor: themeStyleProps.borderColor,
+                        backgroundColor:
+                          themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                      }}
                       className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-green-500 isolate z-[1]`}
                     >
                       {replaceNumsEnglishToArabic(ayah.page + "")}
@@ -304,11 +336,19 @@ const SurahText = () => {
     </Suspense>
   );
 };
-export function JuzItem({ juzNum, font }: { font: number; juzNum: string }) {
+export function JuzItem({
+  juzNum,
+  style,
+}: {
+  font?: number;
+  juzNum: string;
+  style?: CSSProperties;
+}) {
   return (
-    <div className="sticky top-[-4px] z-[2] ">
+    <div className="sticky top-[-4px] z-[2]">
       <Separator />
       <div
+        style={style}
         className={`mx-auto items-center justify-center my-2 text-secondary-foreground text-xl p-3 border-green-500 duration-700 bg-background flex gap-1 border-2 text-center z-[9] transition-all py-2 pt-3 border-solid mb-2 sticky top-[65px]`}
       >
         الجزء {juzNum + ""}

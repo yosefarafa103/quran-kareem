@@ -7,9 +7,7 @@ interface Props {
 }
 const WrapperContent = ({ children }: Props) => {
   const theme = useContext(ThemeContext) as Theme;
-
   const [fontSize] = useState(() => localStorage.getItem("font_size"));
-  const [fontType] = useState(() => localStorage.getItem("font_type"));
   return (
     <main
       style={{
@@ -18,9 +16,7 @@ const WrapperContent = ({ children }: Props) => {
           : "16px",
         // fontFamily: fontType ? fontType : "cairo",
       }}
-      className={`${
-        theme?.theme === "Dark" ? "dark" : "light"
-      } transition-all duration-500`}
+      className={`${theme?.theme?.toLowerCase()} transition-all duration-500`}
     >
       {children}
     </main>

@@ -10,6 +10,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { colors } from "../constants/colors";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { themes } from "@/constants/variables";
 
 const SearchBox = ({
   setFilter,
@@ -24,26 +25,20 @@ const SearchBox = ({
   return (
     <section
       style={{
-        backgroundColor:
-          theme === "Dark" ? `${colors.dark.green}` : colors.light.green,
+        backgroundColor: themes[+theme!?.split("-")?.[1] - 1]?.border,
         color: theme === "Light" ? colors.dark.text : colors.light.text,
       }}
       className={`flex items-center gap-3 sm:m-4 m-2 sticky transition-all duration-500 top-18 rounded-xl p-3`}
     >
       <Input
+        style={{
+          borderColor: "#fff",
+        }}
         onChange={(e) => setValue(e.target.value)}
-        className="p-2 border-solid border-[#ddd] border-[1px] outline-0 grow rounded-md"
+        className="p-2 border-solid border-[1px] border-black outline-0 grow rounded-md"
         type="text"
         placeholder="سوره ال..."
       />
-      <Button
-        onClick={() => setFilter(value)}
-        className={`sm:px-5 text-foreground px-2 py-2 cursor-pointer transition-all duration-500 ${
-          theme === "Dark" ? "border-light" : "border-dark"
-        } bg-[#${theme === "Dark" ? "fff" : "eee"}] rounded-md font-bold`}
-      >
-        ابحث
-      </Button>
     </section>
   );
 };
