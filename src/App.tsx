@@ -23,10 +23,8 @@ const SurahText = lazy(() => import("./components/SurahText"));
 const SurahByImage = lazy(() => import("./components/SurahByImage"));
 const SurahByName = lazy(() => import("./components/SurahByName"));
 const Azkar = lazy(() => import("./components/Azkar"));
-
 const App = () => {
   const queryClient = new QueryClient();
-
   return (
     <>
       <QueryClientProvider client={queryClient}>

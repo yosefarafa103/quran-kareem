@@ -34,7 +34,6 @@ const SwappingSettings = ({
         borderTopColor:
           themes[+theme?.theme?.split("-")?.[1] - 1]?.secondaryColor,
       }}
-      onDrag={(e: DragEvent) => console.log(e.y)}
       dragConstraints={{ bottom: 0, top: -220, left: 0, right: 0 }}
       className="sm:hidden transition-all duration-300 ease-out fixed h-max pb-5 -bottom-[235px] left-0 bg-background w-full z-[10] border-green-500 border-2"
     >

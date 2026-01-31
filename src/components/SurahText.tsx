@@ -35,21 +35,20 @@ const SurahText = () => {
   const [fontSize, setFontSize] = useState(() =>
     localStorage.getItem("font_size")
       ? Number(localStorage.getItem("font_size"))
-      : 18
+      : 18,
   );
   let { id: surahName } = useParams<{ id: string }>();
-  const [scrollSpeed] = useState<() => undefined | number>(() =>
+  const [scrollSpeed] = useState<number>(() =>
     localStorage.getItem("scrolling_speed")
-      ? Number(localStorage.getItem("scrolling_speed")) / 10
-      : undefined
+      ? Number(localStorage.getItem("scrolling_speed"))
+      : 1,
   );
   const [getAyah] = useSearchParams();
   const ref = useRef<HTMLElement | null>(null);
   const [currentAyah, setCurrentAyah] = useState<number | null>(
-    getAyah.get("ayah") ? +getAyah.get("ayah")! : null
+    getAyah.get("ayah") ? +getAyah.get("ayah")! : null,
   );
   const [bodyHeight, setBodyHeight] = useState<number | null>(0);
-  const [showSettings, setShowSettings] = useState<boolean | null>(true);
   const [barHeight, setBarHeight] = useState<number | null>(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState<boolean | null>(false);
   const replaceNumsEnglishToArabic = useCallback((ayahNum: string) => {
@@ -60,7 +59,7 @@ const SurahText = () => {
           const arabicItem = numbers.find((val) => val.english.includes(ltr));
           return ltr.replace(ltr, arabicItem!?.arabic);
         })
-        .join("")
+        .join(""),
     )[0];
   }, []);
   const tafsirSurah = useMemo<string[]>(
@@ -69,11 +68,11 @@ const SurahText = () => {
         .reduce((el, acc) => el.concat(acc), [])
         .map((el: TafserItem) => [el?.ayah_url?.slice(1), el?.text])
         .filter((el: string[]) => el[0]?.split("/")[1] === surahName),
-    [surahName]
+    [surahName],
   ).sort((el, el2) => +el[0].split("/")[2] - +el2[0].split("/")[2]);
   const [searchedAyah, setSearchedAyah] = useState<string>("");
   const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(
-    undefined
+    undefined,
   );
   const theme = useContext<Theme>(ThemeContext);
 
@@ -83,21 +82,16 @@ const SurahText = () => {
     let myInterval: NodeJS.Timeout;
     // Auto Scrolling
     if (isAutoScrolling) {
-      myInterval = setInterval(
-        () => {
-          window.onscroll = () => {
-            if (scrollY === bodyHeight) {
-              return clearInterval(myInterval);
-            }
-          };
-          setBarHeight((window.scrollY / bodyHeight!) * 100);
-          window.scrollBy({
-            top: 1,
-            behavior: "smooth",
-          });
-        },
-        +scrollSpeed! < 1 ? +scrollSpeed! * 1000 : +scrollSpeed! / 1000
-      );
+      myInterval = setInterval(() => {
+        window.onscroll = () => {
+          if (scrollY === bodyHeight) return clearInterval(myInterval);
+        };
+        // setBarHeight((window.scrollY / bodyHeight!) * 100);
+        window.scrollBy({
+          top: scrollSpeed,
+          behavior: "smooth",
+        });
+      });
     }
     // Auto Scrolling
 
@@ -121,8 +115,8 @@ const SurahText = () => {
   useEffect(() => {
     setFilterdAyah(
       suraah.ayahs.filter((a) =>
-        a.text.replace(/[\u064B-\u0652]/g, "").includes(searchedAyah)
-      )
+        a.text.replace(/[\u064B-\u0652]/g, "").includes(searchedAyah),
+      ),
     );
   }, [searchedAyah]);
 
@@ -244,8 +238,7 @@ const SurahText = () => {
       <Button
         variant={"secondary"}
         onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-        className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer flex items-center justify-center `}
-
+        className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-primary border-2 cursor-pointer flex items-center justify-center `}
         // className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-background text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 fixed bottom-0 z-40"
       >
         {!isAutoScrolling ? <Play /> : <Pause />}
@@ -276,7 +269,7 @@ const SurahText = () => {
                     setCurrentAyah(+ayah.numberInSurah);
                     localStorage.setItem(
                       "last_ayah",
-                      JSON.stringify({ surahName, ayahNumber: idx + 1 })
+                      JSON.stringify({ surahName, ayahNumber: idx + 1 }),
                     );
                   }}
                   id={(idx + 1).toString()}
@@ -290,8 +283,8 @@ const SurahText = () => {
                   !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
                     ? ayah?.text.slice(38)
                     : ayah.sajda
-                    ? ayah.text.slice(0, ayah.text.length - 1)
-                    : ayah.text}
+                      ? ayah.text.slice(0, ayah.text.length - 1)
+                      : ayah.text}
                   {ayah.sajda && (
                     <img
                       src={Sajda}
@@ -308,7 +301,7 @@ const SurahText = () => {
                     className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]"
                   >
                     {replaceNumsEnglishToArabic(
-                      ayah?.numberInSurah?.toString()
+                      ayah?.numberInSurah?.toString(),
                     )}
                   </span>
                 </div>
