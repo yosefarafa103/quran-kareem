@@ -28,6 +28,7 @@ import { arabicNumber as numbers, themes } from "@/constants/variables";
 import Loader from "./Loader";
 import { ThemeContext } from "@/context/ThemeContext";
 import { Theme } from "@/types/theme";
+import { Pause, Play } from "lucide-react";
 
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">;
 const SurahText = () => {
@@ -48,7 +49,7 @@ const SurahText = () => {
     getAyah.get("ayah") ? +getAyah.get("ayah")! : null
   );
   const [bodyHeight, setBodyHeight] = useState<number | null>(0);
-  const [showSettings, setShowSettings] = useState<boolean | null>(false);
+  const [showSettings, setShowSettings] = useState<boolean | null>(true);
   const [barHeight, setBarHeight] = useState<number | null>(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState<boolean | null>(false);
   const replaceNumsEnglishToArabic = useCallback((ayahNum: string) => {
@@ -80,6 +81,7 @@ const SurahText = () => {
   const suraah = useMemo<S>(() => quran[Number(surahName) - 1], [surahName]);
   useEffect(() => {
     let myInterval: NodeJS.Timeout;
+    // Auto Scrolling
     if (isAutoScrolling) {
       myInterval = setInterval(
         () => {
@@ -97,6 +99,8 @@ const SurahText = () => {
         +scrollSpeed! < 1 ? +scrollSpeed! * 1000 : +scrollSpeed! / 1000
       );
     }
+    // Auto Scrolling
+
     if (ref.current) {
       setBodyHeight(ref.current.clientHeight);
     }
@@ -163,7 +167,7 @@ const SurahText = () => {
         className="fixed w-[4px] bg-background left-1 pt-3 top-[70px] "
         style={{ height: `${barHeight}vh` }}
       />
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {showSettings && !isTafsirOpen && (
           <>
             <motion.div
@@ -236,7 +240,16 @@ const SurahText = () => {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
+      <Button
+        variant={"secondary"}
+        onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+        className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-[#000] border-2 cursor-pointer flex items-center justify-center `}
+
+        // className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-background text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 fixed bottom-0 z-40"
+      >
+        {!isAutoScrolling ? <Play /> : <Pause />}
+      </Button>
       <div
         style={themeStyleProps}
         className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]"

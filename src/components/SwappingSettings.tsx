@@ -30,6 +30,7 @@ const SwappingSettings = ({
       dragDirectionLock={true}
       drag
       style={{
+        backgroundColor: themes[+theme?.theme?.split("-")?.[1] - 1]?.border,
         borderTopColor:
           themes[+theme?.theme?.split("-")?.[1] - 1]?.secondaryColor,
       }}

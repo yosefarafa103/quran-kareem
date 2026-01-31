@@ -44,7 +44,6 @@ const SurahByName = () => {
     setFilter(quran.filter((el) => removeTashkil(el.name!)?.includes(value)));
   }, [value]);
   const theme = useContext(ThemeContext);
-
   const themeStyleProps = {
     borderColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.secondaryColor,
     backgroundColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.primaryColor,

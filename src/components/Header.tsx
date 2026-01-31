@@ -16,6 +16,7 @@ import { Dialog } from "./ui/dialog";
 
 import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
+import axios from "axios";
 
 function Header() {
   const { isOnline } = useIsOnline();
@@ -36,7 +37,13 @@ function Header() {
     () => localStorage.setItem("theme", theme || "dark"),
     [mode, isDark, theme]
   );
-  console.log();
+  useEffect(() => {
+    console.log(1);
+    (async function () {
+      const data = await axios.get(`https://users.roblox.com/v1/users/1`);
+      console.log(data.data);
+    })();
+  }, []);
 
   return (
     <>
@@ -45,7 +52,7 @@ function Header() {
           <section
             style={{
               backgroundColor: /theme-\d/gi.test(theme!)
-                ? themes[+theme!.split("-")?.[1] - 1]?.secondaryColor
+                ? themes[+theme!.split("-")?.[1] - 1]?.border
                 : isDark === true
                 ? `${colors.dark.green}`
                 : colors.light.green,

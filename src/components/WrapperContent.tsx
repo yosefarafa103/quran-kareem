@@ -14,7 +14,6 @@ const WrapperContent = ({ children }: Props) => {
         fontSize: localStorage.getItem("font_size")
           ? `${Number(fontSize)}px`
           : "16px",
-        // fontFamily: fontType ? fontType : "cairo",
       }}
       className={`${theme?.theme?.toLowerCase()} transition-all duration-500`}
     >
