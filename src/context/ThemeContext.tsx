@@ -3,8 +3,8 @@ import { Theme, themeType } from "../types/theme";
 
 export const ThemeContext = createContext<Theme | null>(null);
 const ThemeWrapper = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<themeType>(
-    () => localStorage.getItem("theme")
+  const [theme, setTheme] = useState<themeType>(() =>
+    localStorage.getItem("theme"),
   );
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

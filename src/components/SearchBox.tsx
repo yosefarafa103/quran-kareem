@@ -6,11 +6,12 @@ import {
   useEffect,
 } from "react";
 import { Theme } from "../types/theme";
-import { ThemeContext } from "../context/ThemeContext";
+
 import { colors } from "../constants/colors";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { themes } from "@/constants/variables";
+import { useThemeStore } from "@/stores/themeStore";
 
 const SearchBox = ({
   setFilter,
@@ -18,7 +19,7 @@ const SearchBox = ({
   setFilter: Dispatch<SetStateAction<string>>;
 }) => {
   const [value, setValue] = useState("");
-  const { theme } = useContext<Theme>(ThemeContext);
+  const { theme } = useThemeStore();
   useEffect(() => {
     setFilter(value);
   }, [value]);

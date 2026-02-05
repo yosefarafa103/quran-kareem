@@ -21,7 +21,8 @@ import ExtractAyaFromQuran from "./surahs/ExtractAyaFromQuran";
 import QuranNav from "./Quran";
 import { cn } from "@/lib/utils";
 import { themes } from "@/constants/variables";
-import { ThemeContext } from "@/context/ThemeContext";
+import { useThemeStore } from "@/stores/themeStore";
+
 const SurahByName = () => {
   const [filter, setFilter] = useState<S[] | null>(null);
   const [isSearched, setIsSearched] = useState<boolean>(false);
@@ -43,10 +44,11 @@ const SurahByName = () => {
   useEffect(() => {
     setFilter(quran.filter((el) => removeTashkil(el.name!)?.includes(value)));
   }, [value]);
-  const theme = useContext(ThemeContext);
+  const { theme } = useThemeStore();
+
   const themeStyleProps = {
-    borderColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.secondaryColor,
-    backgroundColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.primaryColor,
+    borderColor: themes[theme!.split("-")?.[1] - 1]?.secondaryColor,
+    backgroundColor: themes[theme!.split("-")?.[1] - 1]?.primaryColor,
   };
   return (
     <section>
@@ -59,7 +61,7 @@ const SurahByName = () => {
                   ? ` 
                           تم العثور علي
                           ${replaceNumsEnglishToArabic(
-                            filterdData?.length + ""
+                            filterdData?.length + "",
                           )}  
                           نتائج
                       `
@@ -105,7 +107,7 @@ const SurahByName = () => {
                         className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-1 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background"
                       >
                         {replaceNumsEnglishToArabic(
-                          e?.numberInSurah?.toString()
+                          e?.numberInSurah?.toString(),
                         )}
                       </span>
                       <p className="text-[16px] "> {e?.text} </p>
@@ -139,7 +141,7 @@ const SurahByName = () => {
                   themes[+theme?.theme!?.split("-")?.[1] - 1]?.border,
               }}
               className={cn(
-                "pb-4 mt-3 rounded-lg cursor-pointer flex-col gap-2 justify-center border-solid border-2 mx-3"
+                "pb-4 mt-3 rounded-lg cursor-pointer flex-col gap-2 justify-center border-solid border-2 mx-3",
               )}
             >
               <section

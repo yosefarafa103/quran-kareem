@@ -26,9 +26,10 @@ const FilteringAyahs = lazy(() => import("./surahs/FilteringAyahs"));
 const SearchForAyah = lazy(() => import("./surahs/SearchForAyah"));
 import { arabicNumber as numbers, themes } from "@/constants/variables";
 import Loader from "./Loader";
-import { ThemeContext } from "@/context/ThemeContext";
+
 import { Theme } from "@/types/theme";
 import { Pause, Play } from "lucide-react";
+import { useThemeStore } from "@/stores/themeStore";
 
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">;
 const SurahText = () => {
@@ -37,6 +38,8 @@ const SurahText = () => {
       ? Number(localStorage.getItem("font_size"))
       : 18,
   );
+  const { theme } = useThemeStore();
+
   let { id: surahName } = useParams<{ id: string }>();
   const [scrollSpeed] = useState<number>(() =>
     localStorage.getItem("scrolling_speed")
@@ -74,7 +77,6 @@ const SurahText = () => {
   const [filterdAyah, setFilterdAyah] = useState<Surah[] | undefined>(
     undefined,
   );
-  const theme = useContext<Theme>(ThemeContext);
 
   const [isTafsirOpen, setIsTafsirOpen] = useState<boolean>(false);
   const suraah = useMemo<S>(() => quran[Number(surahName) - 1], [surahName]);
@@ -125,8 +127,8 @@ const SurahText = () => {
     tafsirSurah.map((el) => el[1]),
   ];
   const themeStyleProps = {
-    borderColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.secondaryColor,
-    backgroundColor: themes[+theme?.theme!.split("-")?.[1] - 1]?.primaryColor,
+    borderColor: themes[theme!.split("-")?.[1] - 1]?.secondaryColor,
+    backgroundColor: themes[theme!.split("-")?.[1] - 1]?.primaryColor,
   };
   return (
     <Suspense fallback={<Loader isFullScreen />}>
@@ -315,9 +317,9 @@ const SurahText = () => {
                   <div
                     style={{
                       borderTopColor:
-                        themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                        themes[theme!.split("-")?.[1] - 1]?.border,
                       borderBottomColor:
-                        themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                        themes[theme!.split("-")?.[1] - 1]?.border,
                     }}
                     className="my-4 border-y-2 border-y-green-500"
                   >
@@ -326,7 +328,7 @@ const SurahText = () => {
                         fontSize: fontSize - 3,
                         borderColor: themeStyleProps.borderColor,
                         backgroundColor:
-                          themes[+theme?.theme!.split("-")?.[1] - 1]?.border,
+                          themes[theme!.split("-")?.[1] - 1]?.border,
                       }}
                       className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-green-500 isolate z-[1]`}
                     >

@@ -2,7 +2,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import mosque from "../assets/images/mosque.png";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { colors } from "../constants/colors";
-import { ThemeContext } from "@/context/ThemeContext";
 import { Theme, themeType } from "../types/theme";
 import { Menu, Moon, Palette, Sun, Wifi, WifiOff } from "lucide-react";
 import { LINKS, themes } from "../constants/variables";
@@ -17,13 +16,11 @@ import { Dialog } from "./ui/dialog";
 import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
 import axios from "axios";
-
+import { useThemeStore } from "@/stores/themeStore";
 function Header() {
   const { isOnline } = useIsOnline();
-  const { setTheme, theme } = useContext(ThemeContext) as Theme;
-  const [mode, setMode] = useState<themeType>(
-    (): themeType => (localStorage.getItem("theme") as themeType) || theme
-  );
+  const { setTheme, theme } = useThemeStore();
+  const [mode, setMode] = useState<string>(theme || "dark");
   const [isDark, setIsDark] = useState<boolean>(mode === "Dark");
   const handelUpdateTheme = useCallback(() => {
     const newMode = isDark ? "Light" : "Dark";
@@ -35,7 +32,7 @@ function Header() {
   const n = useNavigate();
   useEffect(
     () => localStorage.setItem("theme", theme || "dark"),
-    [mode, isDark, theme]
+    [mode, isDark, theme],
   );
   useEffect(() => {
     console.log(1);
@@ -54,13 +51,13 @@ function Header() {
               backgroundColor: /theme-\d/gi.test(theme!)
                 ? themes[+theme!.split("-")?.[1] - 1]?.border
                 : isDark === true
-                ? `${colors.dark.green}`
-                : colors.light.green,
+                  ? `${colors.dark.green}`
+                  : colors.light.green,
               color: /theme-\d/gi.test(theme!)
                 ? "#fff"
                 : isDark === false
-                ? colors.dark.text
-                : colors.light.text,
+                  ? colors.dark.text
+                  : colors.light.text,
             }}
             className={`flex items-center justify-between transition-all duration-500 max-md:px-4 px-[75px] py-2 border-solid border-2 border-transparent border-b-green-300 sticky top-0`}
           >
@@ -140,7 +137,8 @@ function Header() {
 }
 export default Header;
 function ThemesDropDown() {
-  const theme = useContext(ThemeContext);
+  const { setTheme } = useThemeStore();
+
   return (
     <DropdownMenu dir="rtl">
       <DropdownMenuTrigger>
@@ -148,7 +146,7 @@ function ThemesDropDown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="mt-5">
         {themes.map((el, idx) => (
-          <DropdownMenuItem onClick={() => theme?.setTheme(`theme-${idx}`)}>
+          <DropdownMenuItem onClick={() => setTheme(`theme-${idx}`)}>
             ثيم {++idx}
             <div className="flex gap-1 items-center">
               <span
