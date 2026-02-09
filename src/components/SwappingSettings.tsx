@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { Link } from "react-router";
-import { Theme } from "@/types/theme";
 import { themes } from "@/constants/variables";
 import { useThemeStore } from "@/stores/themeStore";
 type stateHandler<T> = Dispatch<SetStateAction<T>>;
@@ -23,23 +22,23 @@ const SwappingSettings = ({
   const { theme } = useThemeStore();
 
   const themeStyleProps = {
-    borderColor: themes[theme!.split("-")?.[1] - 1]?.secondaryColor,
-    backgroundColor: themes[theme!.split("-")?.[1] - 1]?.primaryColor,
+    borderColor: themes[(parseInt(theme!.split("-")?.[1])) - 1]?.secondaryColor,
+    backgroundColor: themes[(parseInt(theme!.split("-")?.[1])) - 1]?.primaryColor,
   };
   return (
     <motion.div
       dragDirectionLock={true}
       drag
       style={{
-        backgroundColor: themes[theme?.split("-")?.[1] - 1]?.border,
-        borderTopColor: themes[theme?.split("-")?.[1] - 1]?.secondaryColor,
+        backgroundColor: themes[(parseInt(theme!.split("-")?.[1])) - 1]?.border,
+        borderTopColor: themes[(parseInt(theme!.split("-")?.[1])) - 1]?.secondaryColor,
       }}
       dragConstraints={{ bottom: 0, top: -220, left: 0, right: 0 }}
       className="sm:hidden transition-all duration-300 ease-out fixed h-max pb-5 -bottom-[235px] left-0 bg-background w-full z-[10] border-green-500 border-2"
     >
       <motion.div
         style={{
-          backgroundColor: themes[theme?.split("-")?.[1] - 1]?.secondaryColor,
+          backgroundColor: themes[(parseInt(theme!.split("-")?.[1])) - 1]?.secondaryColor,
         }}
         className="absolute w-[35%] h-1 bg-green-500 top-3 left-1/2 -translate-x-1/2 rounded-2xl transition-all duration-700"
       >

@@ -47,8 +47,8 @@ const SurahByName = () => {
   const { theme } = useThemeStore();
 
   const themeStyleProps = {
-    borderColor: themes[theme!.split("-")?.[1] - 1]?.secondaryColor,
-    backgroundColor: themes[theme!.split("-")?.[1] - 1]?.primaryColor,
+    borderColor: themes[parseInt(theme!.split("-")?.[1]) - 1]?.secondaryColor,
+    backgroundColor: themes[parseInt(theme!.split("-")?.[1]) - 1]?.primaryColor,
   };
   return (
     <section>
@@ -101,7 +101,7 @@ const SurahByName = () => {
                         style={{
                           ...themeStyleProps,
                           color:
-                            themes[+theme?.theme!.split("-")?.[1] - 1]
+                            themes[+theme?.parseInt(theme!.split("-")?.[1]) - 1]
                               ?.secondaryColor,
                         }}
                         className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-1 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background"

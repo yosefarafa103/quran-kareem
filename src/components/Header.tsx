@@ -49,7 +49,7 @@ function Header() {
           <section
             style={{
               backgroundColor: /theme-\d/gi.test(theme!)
-                ? themes[+theme!.split("-")?.[1] - 1]?.border
+                ? themes[+parseInt(theme!.split("-")?.[1]) - 1]?.border
                 : isDark === true
                   ? `${colors.dark.green}`
                   : colors.light.green,

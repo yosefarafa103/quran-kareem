@@ -6,18 +6,17 @@ import {
   memo,
   Suspense,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { quran } from "@/constants/quran";
 import tafsirat, { TafsirItem } from "@/constants/tafsirs";
 import { S } from "../constants/quran";
+import { quranV2 } from "../constants/quran-v2";
 import { Separator } from "./ui/separator";
 import Sajda from "@/assets/images/bismillah.png";
 import TafsirPopup from "./TafsirPopup";
@@ -26,11 +25,8 @@ const FilteringAyahs = lazy(() => import("./surahs/FilteringAyahs"));
 const SearchForAyah = lazy(() => import("./surahs/SearchForAyah"));
 import { arabicNumber as numbers, themes } from "@/constants/variables";
 import Loader from "./Loader";
-
-import { Theme } from "@/types/theme";
 import { Pause, Play } from "lucide-react";
 import { useThemeStore } from "@/stores/themeStore";
-
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">;
 const SurahText = () => {
   const [fontSize, setFontSize] = useState(() =>
@@ -127,8 +123,8 @@ const SurahText = () => {
     tafsirSurah.map((el) => el[1]),
   ];
   const themeStyleProps = {
-    borderColor: themes[theme!.split("-")?.[1] - 1]?.secondaryColor,
-    backgroundColor: themes[theme!.split("-")?.[1] - 1]?.primaryColor,
+    borderColor: themes[parseInt(parseInt(theme!.split("-")?.[1]))  - 1]?.secondaryColor,
+    backgroundColor: themes[parseInt(parseInt(theme!.split("-")?.[1]))  - 1]?.primaryColor,
   };
   return (
     <Suspense fallback={<Loader isFullScreen />}>
@@ -163,85 +159,11 @@ const SurahText = () => {
         className="fixed w-[4px] bg-background left-1 pt-3 top-[70px] "
         style={{ height: `${barHeight}vh` }}
       />
-      {/* <AnimatePresence>
-        {showSettings && !isTafsirOpen && (
-          <>
-            <motion.div
-              initial={{ marginBottom: -100 }}
-              animate={{ marginBottom: 0 }}
-              transition={{ duration: 0.7 }}
-              exit={{ marginBottom: -100 }}
-              className="fixed bottom-0 w-full left-0 flex items-center justify-between bg-[#FFF] p-2 border-t-solid border-t-black border-t-2 pt-4 z-[9999999999] "
-            >
-              <div className="flex justify-between items-center overflow-x-scroll whitespace-nowrap">
-                <div>
-                  <Button
-                    onClick={() => {
-                      if (fontSize >= 18) {
-                        setFontSize((current) => (current -= 2));
-                      }
-                    }}
-                    className="max-sm:text-sm px-[15px] py-2 mx-2  text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"
-                  >
-                    تصغير الخط
-                  </Button>
-                  <Button
-                    onClick={() => setFontSize((current) => (current += 2))}
-                    className="max-sm:text-sm px-[15px] py-2 mx-2 text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"
-                  >
-                    تكبير الخط
-                  </Button>
-                </div>
-                <div>
-                  <Button asChild>
-                    <Link
-                      to={`/quran/by-surahs/${
-                        +surahName! < 114 ? `${+surahName! - 1}` : ""
-                      }`}
-                      className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"
-                    >
-                      السورة السابقة
-                    </Link>
-                  </Button>
-                  {tafsirSurah.length && (
-                    <Button
-                      onClick={() => {
-                        setIsTafsirOpen((prev) => !prev);
-                        setShowSettings(false);
-                      }}
-                      className="max-sm:text-sm px-[15px] py-2 mx-2 text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 "
-                    >
-                      اظهر التفسير
-                    </Button>
-                  )}
-                  <Button asChild>
-                    <Link
-                      to={`/quran/by-surahs/${
-                        +surahName! < 114 ? `${+surahName! + 1}` : ""
-                      }`}
-                      className="max-sm:text-sm px-[15px] py-2 mx-2 bg-[#ddd] text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2"
-                    >
-                      السورة التالية
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-              <Button
-                variant={"secondary"}
-                onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-background text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 absolute top-[-50px] left-2"
-              >
-                تفعيل الانزلاق التلقائي
-              </Button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence> */}
+
       <Button
         variant={"secondary"}
         onClick={() => setIsAutoScrolling(!isAutoScrolling)}
         className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-primary border-2 cursor-pointer flex items-center justify-center `}
-        // className="max-sm:text-sm px-[15px] py-2 mx-2 mb-3 bg-background text-lg cursor-pointer rounded-lg border-solid border-[#000] border-2 fixed bottom-0 z-40"
       >
         {!isAutoScrolling ? <Play /> : <Pause />}
       </Button>
@@ -249,7 +171,7 @@ const SurahText = () => {
         style={themeStyleProps}
         className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]"
       >
-        {suraah!?.name}
+        {quranV2[+surahName - 1].surahNameArabic}
       </div>
       <section ref={ref} className="mb-2 pb-[70px] text-center p-2">
         <JuzItem
@@ -276,24 +198,12 @@ const SurahText = () => {
                   }}
                   id={(idx + 1).toString()}
                   style={{ fontSize }}
-                  className={`font-semibold cursor-pointer leading-[2] text-lg w-full inline ${
+                  className={`font-semibold cursor-pointer leading-[1.6] w-full inline ${
                     currentAyah === +ayah.numberInSurah ? "text-red-500" : ""
                   }`}
                 >
-                  {+surahName! !== 9 &&
-                  idx === 0 &&
-                  !ayah?.text.includes("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ")
-                    ? ayah?.text.slice(38)
-                    : ayah.sajda
-                      ? ayah.text.slice(0, ayah.text.length - 1)
-                      : ayah.text}
-                  {ayah.sajda && (
-                    <img
-                      src={Sajda}
-                      className="size-[35px] grayscale-[100%] "
-                      alt=""
-                    />
-                  )}
+                  {quranV2[+surahName - 1].arabic1[idx]}
+               
                   <span
                     style={{
                       fontSize: fontSize - 3,
@@ -317,9 +227,9 @@ const SurahText = () => {
                   <div
                     style={{
                       borderTopColor:
-                        themes[theme!.split("-")?.[1] - 1]?.border,
+                        themes[((parseInt(theme!.split("-")?.[1]))  - 1)]?.border,
                       borderBottomColor:
-                        themes[theme!.split("-")?.[1] - 1]?.border,
+                        themes[(parseInt(theme!.split("-")?.[1]))  - 1]?.border,
                     }}
                     className="my-4 border-y-2 border-y-green-500"
                   >
@@ -328,7 +238,7 @@ const SurahText = () => {
                         fontSize: fontSize - 3,
                         borderColor: themeStyleProps.borderColor,
                         backgroundColor:
-                          themes[theme!.split("-")?.[1] - 1]?.border,
+                          themes[(parseInt(theme!.split("-")?.[1]))  - 1]?.border,
                       }}
                       className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-green-500 isolate z-[1]`}
                     >
