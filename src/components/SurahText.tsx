@@ -27,6 +27,7 @@ import { arabicNumber as numbers, themes } from "@/constants/variables";
 import Loader from "./Loader";
 import { Pause, Play } from "lucide-react";
 import { useThemeStore } from "@/stores/themeStore";
+import ScrollToTop from "./ScrollToTop";
 type TafserItem = Pick<TafsirItem, "ayah_url" | "text">;
 const SurahText = () => {
   const [fontSize, setFontSize] = useState(() =>
@@ -123,135 +124,141 @@ const SurahText = () => {
     tafsirSurah.map((el) => el[1]),
   ];
   const themeStyleProps = {
-    borderColor: themes[parseInt(parseInt(theme!.split("-")?.[1]))  - 1]?.secondaryColor,
-    backgroundColor: themes[parseInt(parseInt(theme!.split("-")?.[1]))  - 1]?.primaryColor,
+    borderColor:
+      themes[parseInt(parseInt(theme!.split("-")?.[1])) - 1]?.secondaryColor,
+    backgroundColor:
+      themes[parseInt(parseInt(theme!.split("-")?.[1])) - 1]?.primaryColor,
   };
   return (
-    <Suspense fallback={<Loader isFullScreen />}>
-      <SwappingSettings
-        surahName={+surahName!}
-        fontSize={fontSize}
-        setFontSize={setFontSize}
-        setIsTafsirOpen={setIsTafsirOpen}
-      />
-      <AnimatePresence>
-        {isTafsirOpen && (
-          <TafsirPopup
-            setIsTafsirOpen={setIsTafsirOpen}
-            tafsirSurahAyahs={tafsirAyahNumber}
-            tafsirSurah={tafsirAyahContent}
-          />
-        )}
-      </AnimatePresence>
-      <SearchForAyah setSearchedAyah={setSearchedAyah} />
-      <AnimatePresence>
-        {searchedAyah && (
-          <FilteringAyahs
-            fontSize={fontSize}
-            searchedAyah={searchedAyah}
-            setCurrentAyah={setCurrentAyah}
-            setSearchedAyah={setSearchedAyah}
-            filterdAyah={filterdAyah}
-          />
-        )}
-      </AnimatePresence>
-      <div
-        className="fixed w-[4px] bg-background left-1 pt-3 top-[70px] "
-        style={{ height: `${barHeight}vh` }}
-      />
-
-      <Button
-        variant={"secondary"}
-        onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-        className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-primary border-2 cursor-pointer flex items-center justify-center `}
-      >
-        {!isAutoScrolling ? <Play /> : <Pause />}
-      </Button>
-      <div
-        style={themeStyleProps}
-        className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]"
-      >
-        {quranV2[+surahName - 1].surahNameArabic}
-      </div>
-      <section ref={ref} className="mb-2 pb-[70px] text-center p-2">
-        <JuzItem
-          style={themeStyleProps}
-          font={fontSize}
-          juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")}
+    <>
+      <Suspense fallback={<Loader isFullScreen />}>
+        <SwappingSettings
+          surahName={+surahName!}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
+          setIsTafsirOpen={setIsTafsirOpen}
         />
-        {suraah.ayahs
-          ?.map((e) => {
-            e.number = +(e.number + "");
-            return e;
-          })
-          ?.map((ayah, idx, a) => {
-            return (
-              <>
-                <div
-                  data-juz={ayah.juz}
-                  onClick={() => {
-                    setCurrentAyah(+ayah.numberInSurah);
-                    localStorage.setItem(
-                      "last_ayah",
-                      JSON.stringify({ surahName, ayahNumber: idx + 1 }),
-                    );
-                  }}
-                  id={(idx + 1).toString()}
-                  style={{ fontSize }}
-                  className={`font-semibold cursor-pointer leading-[1.6] w-full inline ${
-                    currentAyah === +ayah.numberInSurah ? "text-red-500" : ""
-                  }`}
-                >
-                  {quranV2[+surahName - 1].arabic1[idx]}
-               
-                  <span
-                    style={{
-                      fontSize: fontSize - 3,
-                      ...themeStyleProps,
-                      color: themeStyleProps.borderColor,
-                    }}
-                    className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]"
-                  >
-                    {replaceNumsEnglishToArabic(
-                      ayah?.numberInSurah?.toString(),
-                    )}
-                  </span>
-                </div>
-                {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz && (
-                  <JuzItem
-                    style={themeStyleProps}
-                    juzNum={ayah?.juz + 1 + ""}
-                  />
-                )}
-                {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page && (
+        <AnimatePresence>
+          {isTafsirOpen && (
+            <TafsirPopup
+              setIsTafsirOpen={setIsTafsirOpen}
+              tafsirSurahAyahs={tafsirAyahNumber}
+              tafsirSurah={tafsirAyahContent}
+            />
+          )}
+        </AnimatePresence>
+        <SearchForAyah setSearchedAyah={setSearchedAyah} />
+        <AnimatePresence>
+          {searchedAyah && (
+            <FilteringAyahs
+              fontSize={fontSize}
+              searchedAyah={searchedAyah}
+              setCurrentAyah={setCurrentAyah}
+              setSearchedAyah={setSearchedAyah}
+              filterdAyah={filterdAyah}
+            />
+          )}
+        </AnimatePresence>
+        <div
+          className="fixed w-[4px] bg-background left-1 pt-3 top-[70px] "
+          style={{ height: `${barHeight}vh` }}
+        />
+
+        <Button
+          variant={"secondary"}
+          onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+          className={`fixed size-[45px] transition-all duration-700 bottom-[100px] right-4 bg-background text-primary p-[10px] rounded-lg border-solid border-primary border-2 cursor-pointer flex items-center justify-center `}
+        >
+          {!isAutoScrolling ? <Play /> : <Pause />}
+        </Button>
+        <div
+          style={themeStyleProps}
+          className="text-center z-[9] transition-all duration-700 py-2 pt-3 text-lg bg-background border-solid border-2 border-green-500 w-[90%] mx-auto mb-2 sticky top-[60px]"
+        >
+          {quranV2[+surahName - 1].surahNameArabic}
+        </div>
+        <section ref={ref} className="mb-2 pb-[70px] text-center p-2">
+          <JuzItem
+            style={themeStyleProps}
+            font={fontSize}
+            juzNum={replaceNumsEnglishToArabic(suraah?.ayahs[0].juz + "")}
+          />
+          {suraah.ayahs
+            ?.map((e) => {
+              e.number = +(e.number + "");
+              return e;
+            })
+            ?.map((ayah, idx, a) => {
+              return (
+                <>
                   <div
-                    style={{
-                      borderTopColor:
-                        themes[((parseInt(theme!.split("-")?.[1]))  - 1)]?.border,
-                      borderBottomColor:
-                        themes[(parseInt(theme!.split("-")?.[1]))  - 1]?.border,
+                    data-juz={ayah.juz}
+                    onClick={() => {
+                      setCurrentAyah(+ayah.numberInSurah);
+                      localStorage.setItem(
+                        "last_ayah",
+                        JSON.stringify({ surahName, ayahNumber: idx + 1 }),
+                      );
                     }}
-                    className="my-4 border-y-2 border-y-green-500"
+                    id={(idx + 1).toString()}
+                    style={{ fontSize }}
+                    className={`font-semibold cursor-pointer leading-[1.6] w-full inline ${
+                      currentAyah === +ayah.numberInSurah ? "text-red-500" : ""
+                    }`}
                   >
-                    <div
+                    {quranV2[+surahName - 1].arabic1[idx]}
+
+                    <span
                       style={{
                         fontSize: fontSize - 3,
-                        borderColor: themeStyleProps.borderColor,
-                        backgroundColor:
-                          themes[(parseInt(theme!.split("-")?.[1]))  - 1]?.border,
+                        ...themeStyleProps,
+                        color: themeStyleProps.borderColor,
                       }}
-                      className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-green-500 isolate z-[1]`}
+                      className="size-[30px] rounded-[50%] isolate p-2 text-green-500 mx-2 m-1 border-solid border-2 border-green-400 inline-flex items-center justify-center text-[18px]"
                     >
-                      {replaceNumsEnglishToArabic(ayah.page + "")}
-                    </div>
+                      {replaceNumsEnglishToArabic(
+                        ayah?.numberInSurah?.toString(),
+                      )}
+                    </span>
                   </div>
-                )}
-              </>
-            );
-          })}
-        {surahName === "114" && <EndDuaa font={fontSize} />}
-      </section>
-    </Suspense>
+                  {suraah.ayahs[idx]?.juz < suraah.ayahs[idx + 1]?.juz && (
+                    <JuzItem
+                      style={themeStyleProps}
+                      juzNum={ayah?.juz + 1 + ""}
+                    />
+                  )}
+                  {suraah.ayahs[idx]?.page < suraah.ayahs[idx + 1]?.page && (
+                    <div
+                      style={{
+                        borderTopColor:
+                          themes[parseInt(theme!.split("-")?.[1]) - 1]?.border,
+                        borderBottomColor:
+                          themes[parseInt(theme!.split("-")?.[1]) - 1]?.border,
+                      }}
+                      className="my-4 border-y-2 border-y-green-500"
+                    >
+                      <div
+                        style={{
+                          fontSize: fontSize - 3,
+                          borderColor: themeStyleProps.borderColor,
+                          backgroundColor:
+                            themes[parseInt(theme!.split("-")?.[1]) - 1]
+                              ?.border,
+                        }}
+                        className={`mx-auto flex items-center justify-center my-2 size-[40px] text-secondary-foreground text-xl p-3 sticky transition-all duration-700 top-[3px] bg-background text-center rounded-[50%] border-2 border-solid border-green-500 isolate z-[1]`}
+                      >
+                        {replaceNumsEnglishToArabic(ayah.page + "")}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })}
+          {surahName === "114" && <EndDuaa font={fontSize} />}
+        </section>
+      </Suspense>
+      <ScrollToTop />
+    </>
   );
 };
 export function JuzItem({
