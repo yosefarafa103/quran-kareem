@@ -28,7 +28,7 @@ const App = () => {
     <>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Suspense fallback={<Loader isFullScreen />}>
+          {/* <Suspense fallback={<Loader isFullScreen />}> */}
             <Header />
             <WrapperContent>
               <section className="md:w-[calc(100%-150px)] min-h-[calc(100svh-70px)] mx-auto sm:px-5 border-x-2 border-x-green-400">
@@ -64,7 +64,7 @@ const App = () => {
                 </Routes>
               </section>
             </WrapperContent>
-          </Suspense>
+          {/* </Suspense> */}
         </BrowserRouter>
       </QueryClientProvider>
     </>

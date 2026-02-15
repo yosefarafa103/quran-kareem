@@ -34,13 +34,6 @@ function Header() {
     () => localStorage.setItem("theme", theme || "dark"),
     [mode, isDark, theme],
   );
-  useEffect(() => {
-    console.log(1);
-    (async function () {
-      const data = await axios.get(`https://users.roblox.com/v1/users/1`);
-      console.log(data.data);
-    })();
-  }, []);
 
   return (
     <>

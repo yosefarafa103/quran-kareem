@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from "react-router";
+import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { Surah } from "../types/quranSurahs";
 import {
   CSSProperties,
@@ -93,16 +93,7 @@ const SurahText = () => {
       });
     }
     // Auto Scrolling
-
-    if (ref.current) {
-      setBodyHeight(ref.current.clientHeight);
-    }
-    if (getAyah.get("ayah") && suraah) {
-      setTimeout(() => {
-        location.hash = `#${getAyah.get("ayah")}`;
-      }, 500);
-      setCurrentAyah(parseInt(getAyah.get("ayah") ?? ""));
-    }
+    if (ref.current) setBodyHeight(ref.current.clientHeight);
     return () => clearInterval(myInterval);
   }, [bodyHeight, isAutoScrolling]);
   useEffect(() => {
@@ -110,6 +101,18 @@ const SurahText = () => {
     setCurrentAyah(null);
   }, [suraah]);
 
+  useEffect(() => {
+    if (getAyah.get("ayah")) {
+      setTimeout(() => {
+        location.hash = `#${getAyah.get("ayah")}`;
+        document
+          .getElementById(getAyah.get("ayah") || "")
+          ?.scrollIntoView({ behavior: "smooth" });
+        if (!!getAyah.get("ayah"))
+          setCurrentAyah(parseInt(getAyah.get("ayah") || ""));
+      }, 500);
+    }
+  }, [suraah, getAyah]);
   useEffect(() => localStorage.setItem("font_size", `${fontSize}`), [fontSize]);
   useEffect(() => {
     setFilterdAyah(
@@ -118,16 +121,15 @@ const SurahText = () => {
       ),
     );
   }, [searchedAyah]);
+  const location = useLocation();
 
   const [tafsirAyahNumber, tafsirAyahContent] = [
     tafsirSurah.map((el) => el[0].split("/")[2]),
     tafsirSurah.map((el) => el[1]),
   ];
   const themeStyleProps = {
-    borderColor:
-      themes[parseInt(parseInt(theme!.split("-")?.[1])) - 1]?.secondaryColor,
-    backgroundColor:
-      themes[parseInt(parseInt(theme!.split("-")?.[1])) - 1]?.primaryColor,
+    borderColor: themes[parseInt(theme!.split("-")?.[1]) - 1]?.secondaryColor,
+    backgroundColor: themes[parseInt(theme!.split("-")?.[1]) - 1]?.primaryColor,
   };
   return (
     <>
@@ -192,7 +194,7 @@ const SurahText = () => {
               return (
                 <>
                   <div
-                    data-juz={ayah.juz}
+                    data-juz={String(ayah.juz)}
                     onClick={() => {
                       setCurrentAyah(+ayah.numberInSurah);
                       localStorage.setItem(

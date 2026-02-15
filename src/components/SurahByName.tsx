@@ -101,7 +101,7 @@ const SurahByName = () => {
                         style={{
                           ...themeStyleProps,
                           color:
-                            themes[+theme?.parseInt(theme!.split("-")?.[1]) - 1]
+                            themes[parseInt(theme!.split("-")?.[1]) - 1]
                               ?.secondaryColor,
                         }}
                         className="size-[30px] rounded-[50%] p-2 text-green-500 border-solid border-1 border-green-400 inline-flex items-center justify-center !text-[14px] bg-background"
