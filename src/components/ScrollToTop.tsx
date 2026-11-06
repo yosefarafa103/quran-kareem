@@ -23,14 +23,13 @@ export default function ScrollToTop() {
 
   return (
     <>
-      <button
+      <Button
         size="icon"
-        variant="borderGreen"
         onClick={scrollToTop}
-        className={`scroll-to-top ${show ? "fixed right-4 bottom-[150px] text-center z-[9] transition-all duration-700 py-2 pt-3 text-4xl bg-background border-solid border-2 border-green-500 size-12 flex items-center justify-center rounded-lg" : ""}`}
+        className={`scroll-to-top ${show ? "fixed right-4 bottom-[150px] text-[var(--borderColor)] text-center z-[9] transition-all duration-700 py-2 pt-3 text-4xl bg-background border-solid border-2 border-[var(--borderColor)] size-12 flex items-center justify-center rounded-lg" : ""}`}
       >
         <ArrowBigUp />
-      </button>
+      </Button>
     </>
   );
 }

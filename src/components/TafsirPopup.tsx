@@ -35,8 +35,8 @@ const TafsirPopup = ({
     []
   );
   return (
-    <FilterPopupWrapper>
-      <div className="mb-4 flex items-center justify-between">
+    <>
+      <div className="mb-4 flex items-center justify-between sticky -top-5 right-0 bg-background p-4">
         <div>تفسير الايات المتاحة في التفسير الميسر</div>
         <Button onClick={() => setIsTafsirOpen((prev) => !prev)}>رجوع</Button>
       </div>
@@ -49,7 +49,7 @@ const TafsirPopup = ({
       />
       <section className="mt-5">
         {filterTafsirAyah !== 0 &&
-        filterTafsirAyah < tafsirSurahAyahs.length ? (
+          filterTafsirAyah < tafsirSurahAyahs.length ? (
           <>
             <div className="mb-4 text-orange-400">
               <span className="size-[30px] rounded-[50%] p-2 text-orange-700 outline-2 outline-orange-400 mx-2 m-1 bg-white border-solid border-2 border-orange-200 inline-flex items-center justify-center text-[18px]">
@@ -79,7 +79,7 @@ const TafsirPopup = ({
           ))
         )}
       </section>
-    </FilterPopupWrapper>
+    </>
   );
 };
 

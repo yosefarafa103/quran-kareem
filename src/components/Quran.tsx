@@ -1,9 +1,8 @@
-import { lazy, Suspense, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Suspense, useState } from "react";
+import { useNavigate } from "react-router";
 import Loader from "./Loader";
 import { Star } from "lucide-react";
-const AllSurahsInOnePlace = lazy(() => import("./AllSurahsInOnePlace"));
-// import AllSurahsInOnePlace from
+// const AllSurahsInOnePlace = lazy(() => import("./AllSurahsInOnePlace"));
 
 const QuranNav = () => {
   const navigate = useNavigate();

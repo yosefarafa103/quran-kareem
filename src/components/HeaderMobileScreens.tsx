@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const HeaderMobileScreens = () => {
   return (
-    <div className="flex items-center gap-3 flex-col p-4 bg-white border-solid border-2 w-[99%] mx-auto border-black sm:hidden">
+    <div className="flex items-center gap-3 flex-col p-4 bg-background border-solid border-2 w-[99%] mx-auto border-black sm:hidden">
       {LINKS?.map((lnk) => (
         <NavLink
           to={`${lnk.route}`}

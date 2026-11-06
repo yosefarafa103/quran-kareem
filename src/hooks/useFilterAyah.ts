@@ -1,4 +1,5 @@
 import { quran, S } from "@/constants/quran";
+import { quranV2 } from "@/constants/quran-v2";
 import { Surah } from "@/types/quranSurahs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 type FiterType = {
@@ -10,26 +11,27 @@ export interface FilteredAyahs {
   name: string;
   data: Surah[];
 }
+type QuranV2Surah = typeof quranV2[number]
 
 export function useFilterAyah({
   isInSurah = false,
   searchedAyah,
   surahNumber,
 }: FiterType) {
-  const [filterdData, setFilterData] = useState<Partial<FilteredAyahs>[]>([]);
+  const [filterdData, setFilterData] = useState<{ data: string[], name?: string }[]>([]);
   const allAyahs = useCallback(() => {
-    const o: { [key: number]: S } = {};
-    quran.map((e, i, a) => {
-      return e.ayahs.map((item) => {
-        o[i + 1] = { ...e, name: e.name };
+    const o: { [key: number]: QuranV2Surah } = {};
+    quranV2.map((e, i, a) => {
+      return e.arabic2.map((item) => {
+        o[i + 1] = { ...e, name: e.surahNameArabic };
       });
     });
     return o;
   }, [])();
   if (isInSurah) {
     setFilterData(
-      quran[surahNumber].ayahs.filter((a) =>
-        a.text.replace(/[\u064B-\u0652]/g, "").includes(searchedAyah)
+      quranV2[surahNumber].arabic2.filter((a) =>
+        a.includes(searchedAyah)
       )
     );
     return { filterdData };
@@ -37,12 +39,10 @@ export function useFilterAyah({
   const ayahs = useMemo(() => {
     return (
       Object.values(allAyahs)
-        // @ts-ignore
-        .map((item: S, nx) => {
+        .map((item, nx) => {
           return item.ayahs;
         })
-        // @ts-ignore
-        .reduce((item: S[], nx: S[]) => {
+        .reduce((item, nx) => {
           return item.concat(nx);
         }, [])
     );
@@ -50,15 +50,15 @@ export function useFilterAyah({
   useEffect(() => {
     let result = Object.values(allAyahs)
       .map((item) => {
-        return item.ayahs.filter((a) => {
-          return a.text.replace(/[\u064B-\u0652]/g, "").match(searchedAyah);
+        return item.arabic2.filter((a) => {
+          return a.match(searchedAyah);
         });
       })
       .map((e, idx) => {
-        const data: Partial<S> & Partial<{ data: Surah[] }> = {
+        const data: { data: string[], name?: string } = {
         };
         if (e.length) {
-          data["name"] = allAyahs[idx + 1]?.name;
+          data["name"] = allAyahs[idx + 1]?.surahNameArabic;
           data["data"] = e;
         }
         return data;
@@ -67,5 +67,5 @@ export function useFilterAyah({
     setFilterData(result);
     return () => { };
   }, [searchedAyah]);
-  return { filterdData }; 
+  return { filterdData };
 }

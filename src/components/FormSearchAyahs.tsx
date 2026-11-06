@@ -59,7 +59,7 @@ const FormSearchAyahs = ({
                 <Input
                   placeholder="ابحث عن الاية من خلال جزء منها"
                   type=""
-                  className="text-background"
+                  className="text-foreground"
                   {...field}
                 />
               </FormControl>

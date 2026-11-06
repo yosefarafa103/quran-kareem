@@ -27,7 +27,7 @@ const ExtractAyaFromQuran: React.FC<ExtractAyaFromQuranProps> = ({
         </div>
       </DialogTrigger>
 
-      <DialogContent className="bg-black">
+      <DialogContent className="bg-background text-foreground z-[9999]">
         <DialogTitle>استخراج آية من القرآن</DialogTitle>
 
         <FormSearchAyahs

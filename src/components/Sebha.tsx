@@ -112,7 +112,7 @@ const Sebha = () => {
                     <>
                         <ZekrItem handlingClickFN={() => navigator.vibrate(100)
                         } id={id * 10} count={max} text={dhikr} key={id} />
-                        <section style={{ fontSize: localStorage.getItem("font_size") + "px", }} className="p-3 border-r-solid border-r-orange-400 border-b-solid border-b-2 border-b-orange-400 bg-background border-r-[7px] leading-[1.5] rounded-lg mt-10 mb-5">
+                        <section style={{ fontSize: 30, }} className="p-3 border-r-solid border-r-orange-400 border-b-solid border-b-2 border-b-orange-400 bg-background border-r-[7px] leading-[1.5] rounded-lg mt-10 mb-5">
                             {reward}
                         </section>
                         <Separator />

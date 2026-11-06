@@ -2,7 +2,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import mosque from "../assets/images/mosque.png";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { colors } from "../constants/colors";
-import { Theme, themeType } from "../types/theme";
 import { Menu, Moon, Palette, Sun, Wifi, WifiOff } from "lucide-react";
 import { LINKS, themes } from "../constants/variables";
 import {
@@ -15,7 +14,6 @@ import { Dialog } from "./ui/dialog";
 
 import InstallButton from "./InstallWebsite";
 import { useIsOnline } from "@/hooks/useIsOnline";
-import axios from "axios";
 import { useThemeStore } from "@/stores/themeStore";
 function Header() {
   const { isOnline } = useIsOnline();
@@ -34,7 +32,6 @@ function Header() {
     () => localStorage.setItem("theme", theme || "dark"),
     [mode, isDark, theme],
   );
-
   return (
     <>
       <Dialog>
@@ -45,9 +42,9 @@ function Header() {
                 ? themes[+parseInt(theme!.split("-")?.[1]) - 1]?.border
                 : isDark === true
                   ? `${colors.dark.green}`
-                  : colors.light.green,
+                  : '#f7f7f7',
               color: /theme-\d/gi.test(theme!)
-                ? "#fff"
+                ? "#000"
                 : isDark === false
                   ? colors.dark.text
                   : colors.light.text,
@@ -62,9 +59,8 @@ function Header() {
                 <NavLink
                   key={lnk.route}
                   to={`${lnk.route}`}
-                  className={`[&.active]:${
-                    theme === "Dark" ? "border-b-white" : "border-b-black"
-                  } max-sm:hidden pb-1 border-solid border-b-4 border-transparent`}
+                  className={`[&.active]:${theme === "Dark" ? "border-b-white" : "border-b-black"
+                    } max-sm:hidden pb-1 border-solid border-b-4 border-transparent`}
                 >
                   {lnk.name}
                 </NavLink>
@@ -111,7 +107,7 @@ function Header() {
             side="bottom"
             sideOffset={20}
             align="end"
-            className="w-full max-w-[600px] relative z-[999] bg-green-300"
+            className="w-full max-w-[600px] relative z-[999] bg-foreground"
           >
             {LINKS?.map((lnk) => (
               <DropdownMenuItem
