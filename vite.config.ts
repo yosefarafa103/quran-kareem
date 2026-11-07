@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       workbox: {
-        maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
+        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /./,
@@ -34,7 +34,7 @@ export default defineConfig({
       includeAssets: ["mosque-512.png", "robots.txt"],
       manifest: {
         name: "Quran",
-        short_name: "Quran & Azkar",
+        short_name: "Quran Kareem",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
@@ -59,4 +59,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  
 });
